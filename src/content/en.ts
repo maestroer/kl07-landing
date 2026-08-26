@@ -51,6 +51,7 @@ export const en: Dict = {
       body: 'kl07 is being built without outside money. if you want to help — here are the project wallets. every amount goes into the deploy and the build.',
       hint: 'click an address to copy it',
       copied: 'copied',
+      selected: 'selected — press ctrl+c',
       soon: 'soon',
       close: 'close',
     },

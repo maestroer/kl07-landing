@@ -7,7 +7,7 @@ import { wallets } from '../site'
 export function DonateModal({ onClose }: { onClose: () => void }) {
   const { t } = useI18n()
   const d = t.home.donate
-  const [copied, setCopied] = useState<string | null>(null)
+  const [flash, setFlash] = useState<{ key: string; ok: boolean } | null>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
@@ -26,22 +26,31 @@ export function DonateModal({ onClose }: { onClose: () => void }) {
 
   async function copy(key: string, address: string) {
     if (!address) return
+
+    const done = (ok: boolean) => {
+      setFlash({ key, ok })
+      window.setTimeout(() => setFlash((f) => (f && f.key === key ? null : f)), 2400)
+    }
+
     try {
       await navigator.clipboard.writeText(address)
-    } catch {
-      // буфер недоступен (http, старый браузер) — выделяем текст, чтобы скопировать вручную
-      const node = document.getElementById(`addr-${key}`)
-      if (node) {
-        const range = document.createRange()
-        range.selectNodeContents(node)
-        const sel = window.getSelection()
-        sel?.removeAllRanges()
-        sel?.addRange(range)
-      }
+      done(true)
       return
+    } catch {
+      // Буфер недоступен: http-origin, старый браузер, отозванное разрешение.
+      // Молча ничего не делать нельзя — человек копирует адрес кошелька и должен
+      // понимать, лежит он в буфере или надо жать ctrl+c самому.
     }
-    setCopied(key)
-    window.setTimeout(() => setCopied((c) => (c === key ? null : c)), 1600)
+
+    const node = document.getElementById(`addr-${key}`)
+    if (node) {
+      const range = document.createRange()
+      range.selectNodeContents(node)
+      const sel = window.getSelection()
+      sel?.removeAllRanges()
+      sel?.addRange(range)
+    }
+    done(false)
   }
 
   // Портал в body: у окна проекта есть backdrop-filter, а он делает элемент
@@ -104,15 +113,24 @@ export function DonateModal({ onClose }: { onClose: () => void }) {
                       onClick={() => copy(key, w.address)}
                       className="group flex min-w-0 flex-1 items-center gap-2 text-left"
                       title={d.hint}
+                      aria-label={`${w.ticker} ${w.network} — ${d.hint}`}
                     >
                       <span
                         id={`addr-${key}`}
-                        className="min-w-0 flex-1 truncate text-[12px] text-txt transition-colors group-hover:text-orange"
+                        className="min-w-0 flex-1 break-all text-[12px] leading-snug text-txt transition-colors group-hover:text-orange"
                       >
                         {w.address}
                       </span>
-                      <span className="shrink-0 text-[11px] text-mute transition-colors group-hover:text-orange">
-                        {copied === key ? d.copied : '⧉'}
+                      <span
+                        className={`shrink-0 text-[11px] transition-colors ${
+                          flash?.key === key
+                            ? flash.ok
+                              ? 'text-grn'
+                              : 'text-orange'
+                            : 'text-mute group-hover:text-orange'
+                        }`}
+                      >
+                        {flash?.key === key ? (flash.ok ? d.copied : d.selected) : '⧉'}
                       </span>
                     </button>
                   ) : (

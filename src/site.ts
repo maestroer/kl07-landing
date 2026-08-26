@@ -26,9 +26,7 @@ export type Wallet = {
  * Впишите адреса сюда — окно подхватит их само, больше нигде править не нужно.
  */
 export const wallets: Wallet[] = [
-  { ticker: 'BTC', network: 'bitcoin', address: '' },
-  { ticker: 'ETH', network: 'erc-20', address: '' },
-  { ticker: 'USDT', network: 'trc-20', address: '' },
-  { ticker: 'USDT', network: 'ton', address: '' },
-  { ticker: 'TON', network: 'ton', address: '' },
+  { ticker: 'BTC', network: 'bitcoin', address: 'bc1qnnnepmhu3yfe24ccgnm82ppy0ga3vj9qxz559t' },
+  { ticker: 'USDT', network: 'trc-20', address: 'TLAB5PAT2ksK8eixRmefRxcdZ5DmPV6FjT' },
+  { ticker: 'SOL', network: 'solana', address: 'Hvrc9QikDxRLZNogHjcKCFUHRx8HCvXd3JB8dSrR7ZYK' },
 ]
