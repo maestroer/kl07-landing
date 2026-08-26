@@ -8,8 +8,8 @@ export const site = {
    * Если не задан — форма падает в mailto-фолбэк и всё равно доводит лид.
    */
   waitlistEndpoint: (import.meta.env.VITE_WAITLIST_ENDPOINT as string | undefined) || '',
-  onepager: '/KL07_OnePager.pdf',
-  deck: '/KL07_Presentation.pdf',
+  onepager: `${import.meta.env.BASE_URL}KL07_OnePager.pdf`,
+  deck: `${import.meta.env.BASE_URL}KL07_Presentation.pdf`,
 }
 
 export type Wallet = {

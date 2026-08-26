@@ -26,8 +26,20 @@ jobs:
           cache: npm
 
       - run: npm ci
+
+      # Есть public/CNAME — значит сайт на своём домене и живёт в корне.
+      # Нет — значит отдаётся с github.io/<repo>/ и собирать надо под подпапку.
+      - name: base url
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "VITE_BASE=/" >> "$GITHUB_ENV"
+          else
+            echo "VITE_BASE=/${GITHUB_REPOSITORY#*/}/" >> "$GITHUB_ENV"
+          fi
+
       - run: npm run build
         env:
+          VITE_BASE: ${{ env.VITE_BASE }}
           VITE_WAITLIST_ENDPOINT: ${{ vars.VITE_WAITLIST_ENDPOINT }}
 
       # GitHub Pages не умеет SPA-fallback: отдаём тот же index.html на 404,
