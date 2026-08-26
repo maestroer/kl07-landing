@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { copyText } from '../lib/clipboard'
 
 /* ── появление при скролле ─────────────────────────────────────────────── */
 
@@ -52,6 +53,49 @@ export function SectionHead({ n, label, note }: { n?: string; label: string; not
       </span>
       {note && <span className="text-right text-[11px] text-mute">{note}</span>}
     </div>
+  )
+}
+
+/* ── почта: клик копирует адрес ────────────────────────────────────────── */
+
+export function CopyMail({
+  value,
+  label,
+  hint,
+  copiedText,
+  manualText,
+}: {
+  value: string
+  label: string
+  hint: string
+  copiedText: string
+  manualText: string
+}) {
+  const [state, setState] = useState<'idle' | 'ok' | 'fail'>('idle')
+  const timer = useRef<number>()
+
+  useEffect(() => () => window.clearTimeout(timer.current), [])
+
+  async function run() {
+    const ok = await copyText(value)
+    setState(ok ? 'ok' : 'fail')
+    window.clearTimeout(timer.current)
+    // Если скопировать не вышло, адрес показан на экране — даём время его забрать.
+    timer.current = window.setTimeout(() => setState('idle'), ok ? 2400 : 10000)
+  }
+
+  return (
+    <span className="inline-flex flex-wrap items-baseline gap-2">
+      <button type="button" onClick={run} className="link" title={hint} aria-label={`${value} — ${hint}`}>
+        [{label}]
+      </button>
+      {state === 'ok' && <span className="text-[11px] text-grn">{copiedText}</span>}
+      {state === 'fail' && (
+        <span className="text-[11px] text-orange">
+          <span className="select-all text-txt">{value}</span> — {manualText}
+        </span>
+      )}
+    </span>
   )
 }
 

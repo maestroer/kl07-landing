@@ -1,7 +1,7 @@
 export const site = {
   tg: '@mercydetka',
   tgUrl: 'https://t.me/mercydetka',
-  email: 'northstrean@gmail.com',
+  email: 'kl07business@gmail.com',
   /**
    * Куда уходит заявка из вейтлиста.
    * Задаётся через .env: VITE_WAITLIST_ENDPOINT=https://formspree.io/f/xxxxx

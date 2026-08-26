@@ -33,6 +33,7 @@ export const en: Dict = {
       ['segments', 'b2b · b2c'],
     ],
     findme: 'contact',
+    copyMail: { hint: 'click to copy the address', copied: 'copied', manual: 'copy it manually' },
 
     statusPanel: {
       star: ['status', 'mvp ready'],

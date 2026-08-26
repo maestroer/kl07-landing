@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useI18n } from '../i18n'
 import { wallets } from '../site'
+import { copyText, selectNode } from '../lib/clipboard'
 
 /** Окно донатов — повторяет оболочку основного окна проекта. */
 export function DonateModal({ onClose }: { onClose: () => void }) {
@@ -32,24 +33,11 @@ export function DonateModal({ onClose }: { onClose: () => void }) {
       window.setTimeout(() => setFlash((f) => (f && f.key === key ? null : f)), 2400)
     }
 
-    try {
-      await navigator.clipboard.writeText(address)
+    if (await copyText(address)) {
       done(true)
       return
-    } catch {
-      // Буфер недоступен: http-origin, старый браузер, отозванное разрешение.
-      // Молча ничего не делать нельзя — человек копирует адрес кошелька и должен
-      // понимать, лежит он в буфере или надо жать ctrl+c самому.
     }
-
-    const node = document.getElementById(`addr-${key}`)
-    if (node) {
-      const range = document.createRange()
-      range.selectNodeContents(node)
-      const sel = window.getSelection()
-      sel?.removeAllRanges()
-      sel?.addRange(range)
-    }
+    selectNode(`addr-${key}`)
     done(false)
   }
 

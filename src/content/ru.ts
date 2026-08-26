@@ -32,6 +32,7 @@ export const ru = {
       ['сегменты', 'b2b · b2c'],
     ] as [string, string][],
     findme: 'написать',
+    copyMail: { hint: 'нажмите, чтобы скопировать адрес', copied: 'скопировано', manual: 'скопируйте вручную' },
 
     statusPanel: {
       star: ['статус', 'mvp ready'] as [string, string],

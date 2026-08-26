@@ -4,7 +4,7 @@ import { useDocMeta, useI18n } from '../i18n'
 import { site } from '../site'
 import { Chrome } from '../components/Chrome'
 import { DonateModal } from '../components/DonateModal'
-import { Mark, Reveal, SectionHead, Stat, Tag } from '../components/ui'
+import { CopyMail, Mark, Reveal, SectionHead, Stat, Tag } from '../components/ui'
 import { Waitlist } from '../components/Waitlist'
 
 export default function Home() {
@@ -43,9 +43,13 @@ export default function Home() {
                 <a href={site.tgUrl} target="_blank" rel="noreferrer noopener" className="link">
                   [telegram]
                 </a>
-                <a href={`mailto:${site.email}`} className="link">
-                  [email]
-                </a>
+                <CopyMail
+                  value={site.email}
+                  label="email"
+                  hint={h.copyMail.hint}
+                  copiedText={h.copyMail.copied}
+                  manualText={h.copyMail.manual}
+                />
               </span>
             </div>
           </div>
