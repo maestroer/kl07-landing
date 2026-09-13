@@ -12,9 +12,15 @@ export const en: Dict = {
       'Working MVP, modelled unit economics, three deal structures: convertible note, direct equity, revenue share.',
   },
 
+  b2bMeta: {
+    title: 'KL07 B2B — the honest cost of your own team',
+    desc: 'What your own team really costs, including downtime and context switching. A cost and decision suite for companies without an in-house analyst.',
+  },
+
   nav: {
     product: 'product',
     invest: 'investors',
+    b2b: 'b2b',
     back: 'back home',
     tg: 'telegram',
   },
@@ -22,6 +28,7 @@ export const en: Dict = {
   chrome: {
     home: 'kl07 ~ product',
     invest: 'kl07 ~ investor',
+    b2b: 'kl07 ~ b2b',
   },
 
   home: {
@@ -401,6 +408,108 @@ export const en: Dict = {
 
     disclaimer:
       'all amounts are in rubles. the figures are an illustrative estimate based on the internal unit economics of the project and do not constitute legal or financial advice; consulting a lawyer is recommended before signing any terms (in particular regarding the equity structure).',
+  },
+
+  b2b: {
+    tagline: 'kl07 b2b · cost & decision suite · in development',
+    headlineA: 'let us count what your own team',
+    headlineB: 'really costs you',
+    lead: [
+      'a business rarely has an analyst at hand every time it needs to know what a feature, project or rollout will cost.',
+      'kl07 b2b is a set of lenses on top of one calculation engine: the honest cost of "build it / skip it / who builds it"',
+      'without a separate research round.',
+    ],
+    status: 'the b2b block is in development — recruiting companies for a pilot',
+    ctaPilot: 'join the pilot on telegram',
+    forWho: {
+      label: 'for whom',
+      note: 'companies without an in-house analyst',
+      items: [
+        ['product managers and team leads', 'deciding whether to take a feature and who builds it — now, not after a week of research'],
+        ['founders', 'comparing their own team, outstaff and an off-the-shelf solution in money, not gut feeling'],
+        ['overloaded analysts', 'offloading routine estimates so analysts keep the work that needs judgement'],
+      ],
+    },
+    calc: {
+      label: 'calculator',
+      note: 'demo of the flagship feature · estimate',
+      title: 'own team vs outstaff — including downtime',
+      intro:
+        'a regular calculator prices your team as hours × rate. it does not see that the developer is already busy on another project: that project stalls, and context switching eats part of the time on both tasks.',
+      hours: 'hours needed for the task',
+      cost: 'full hourly cost of your developer, ₽',
+      costHint: 'with taxes and overhead, not bare salary',
+      outstaff: 'outstaff rate, ₽/hour',
+      allocation: 'currently busy on another project',
+      criticality: 'criticality of the project that stalls',
+      crit: ['low', 'medium', 'high'],
+      penalty: 'context-switch tax',
+      own: 'own team',
+      out: 'outstaff',
+      hidden: 'of which hidden cost of downtime and switching',
+      verdictOwn: 'own team is cheaper by',
+      verdictOut: 'outstaff is cheaper by',
+      rows: {
+        naive: 'naive cost (hours × rate)',
+        switch: 'context-switch tax',
+        delay: 'downtime cost of the other project',
+        total: 'honest cost',
+      },
+      naiveNote: 'this is what a regular calculator shows',
+      assumptions:
+        'assumptions are visible and adjustable: the context-switch tax is a well-known effect, not a measured fact, default 20–30%. without data on project value, a day of downtime is a team day × criticality factor (×1 / ×2 / ×4). this is a demo model, not a calculation for your company.',
+    },
+    how: {
+      label: 'how we count',
+      note: 'four steps, no magic',
+      steps: [
+        ['base cost', 'required hours × full hourly cost for everyone needed on the task'],
+        ['context-switch tax', 'with partial allocation you need more effective hours: hours / (1 − penalty)'],
+        ['downtime cost', 'days of delay for the project the time is taken from × that project cost per day'],
+        ['honest comparison', 'the total next to outstaff: "own team X ₽, of which Y ₽ is hidden downtime cost"'],
+      ],
+    },
+    engine: {
+      label: 'one engine',
+      note: 'not 15 calculators, but presets of one estimate',
+      readyTag: 'live',
+      newTag: 'new',
+      ready: [
+        ['project', 'the existing project calculator'],
+        ['profitability', 'dashboard: kpi, margin, net/hour, workload'],
+        ['tools and subscriptions', 'subtracker'],
+        ['team: outstaff / instaff', 'calculator mode'],
+        ['rollout: build / buy / adapt', 'turnkey mode + a third "adapt" branch'],
+      ],
+      next: [
+        ['cost with your current team', 'including downtime and context switching — the flagship feature nobody else has'],
+        ['feature-level calculator', 'estimate a single feature to prioritise the backlog; features roll up into a project quote'],
+        ['llm orchestrator', 'describe the task in words — the model picks a preset and calls the engine; numbers always come from the calculation, not a model guess'],
+        ['tools per team', 'subtracker aggregating subscriptions across the whole team'],
+      ],
+    },
+    roadmap: {
+      label: 'roadmap',
+      note: 'what, in which order',
+      steps: [
+        ['team and allocation', 'team card: who works on which project and at what share — the foundation for an honest calculation'],
+        ['cost with your current team', 'the flagship feature we take to b2b clients first'],
+        ['feature-level calculator', 'cheap: parameterising the existing engine'],
+        ['llm orchestrator', 'once there are 2–3 calculation presets to call'],
+        ['tools per team', 'in parallel, independent of the rest'],
+      ],
+      laterTitle: 'later — only once accuracy statistics exist',
+      later: ['ai idea analyser', 'necessity validator', 'discovery manager', 'cross-team impact estimator', 'gpu cluster cost — on demand'],
+      laterNote:
+        'these tools claim to replace the judgement of a live analyst. in b2b a mistake costs real budget, so we start them only after the simple calculations prove accurate against facts.',
+    },
+    pilot: {
+      label: 'pilot',
+      note: 'for the first companies',
+      headline: 'want to count your team on real data?',
+      body: 'we are taking a few companies into a pilot: we set up your team and allocation, calculate a couple of real decisions and check the estimate against the outcome. write to us — we reply within a day.',
+      tg: 'message on telegram',
+    },
   },
 
   footer: {

@@ -68,6 +68,7 @@ export function Chrome({ title, children }: { title: string; children: React.Rea
   const { lang, setLang, t } = useI18n()
   const { pathname } = useLocation()
   const onInvest = pathname.startsWith('/invest')
+  const onB2B = pathname.startsWith('/b2b')
 
   return (
     <>
@@ -102,19 +103,21 @@ export function Chrome({ title, children }: { title: string; children: React.Rea
 
           {/* навигация */}
           <div className="flex items-center gap-4 border-b border-soft px-4 py-2 text-[12px] sm:px-7">
-            <Link
-              to="/"
-              className={`transition-colors hover:text-orange ${!onInvest ? 'font-bold text-lilac' : 'text-dim'}`}
-            >
-              {t.nav.product}
-            </Link>
-            <span className="text-mute">/</span>
-            <Link
-              to="/invest"
-              className={`transition-colors hover:text-orange ${onInvest ? 'font-bold text-lilac' : 'text-dim'}`}
-            >
-              {t.nav.invest}
-            </Link>
+            {[
+              { to: '/', label: t.nav.product, active: !onInvest && !onB2B },
+              { to: '/b2b', label: t.nav.b2b, active: onB2B },
+              { to: '/invest', label: t.nav.invest, active: onInvest },
+            ].map((item, i) => (
+              <span key={item.to} className="flex items-center gap-4">
+                {i > 0 && <span className="text-mute">/</span>}
+                <Link
+                  to={item.to}
+                  className={`transition-colors hover:text-orange ${item.active ? 'font-bold text-lilac' : 'text-dim'}`}
+                >
+                  {item.label}
+                </Link>
+              </span>
+            ))}
             <a
               href={site.tgUrl}
               target="_blank"

@@ -48,8 +48,10 @@ jobs:
       - name: spa fallback
         run: |
           cp dist/index.html dist/404.html
-          mkdir -p dist/invest
-          cp dist/index.html dist/invest/index.html
+          for route in invest b2b; do
+            mkdir -p "dist/$route"
+            cp dist/index.html "dist/$route/index.html"
+          done
 
       - uses: actions/upload-pages-artifact@v3
         with:
