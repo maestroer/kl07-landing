@@ -488,21 +488,6 @@ export const en: Dict = {
         ['tools per team', 'subtracker aggregating subscriptions across the whole team'],
       ],
     },
-    roadmap: {
-      label: 'roadmap',
-      note: 'what, in which order',
-      steps: [
-        ['team and allocation', 'team card: who works on which project and at what share — the foundation for an honest calculation'],
-        ['cost with your current team', 'the flagship feature we take to b2b clients first'],
-        ['feature-level calculator', 'cheap: parameterising the existing engine'],
-        ['llm orchestrator', 'once there are 2–3 calculation presets to call'],
-        ['tools per team', 'in parallel, independent of the rest'],
-      ],
-      laterTitle: 'later — only once accuracy statistics exist',
-      later: ['ai idea analyser', 'necessity validator', 'discovery manager', 'cross-team impact estimator', 'gpu cluster cost — on demand'],
-      laterNote:
-        'these tools claim to replace the judgement of a live analyst. in b2b a mistake costs real budget, so we start them only after the simple calculations prove accurate against facts.',
-    },
     pilot: {
       label: 'pilot',
       note: 'for the first companies',

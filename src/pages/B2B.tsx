@@ -228,37 +228,9 @@ export default function B2B() {
         </div>
       </Reveal>
 
-      {/* ── роадмап ─────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="05" label={b.roadmap.label} note={b.roadmap.note} />
-        <ol className="m-0 list-none space-y-2 p-0">
-          {b.roadmap.steps.map(([title, text], i) => (
-            <li key={title} className="flex gap-4 text-[12px]">
-              <span className="w-6 shrink-0 tabular-nums text-mute">{String(i + 1).padStart(2, '0')}</span>
-              <span>
-                <span className="font-bold text-white">{title}</span>
-                <span className="text-dim"> — {text}</span>
-              </span>
-            </li>
-          ))}
-        </ol>
-
-        <div className="mt-6 cell rounded-lg px-4 py-4">
-          <div className="mb-3 text-[12px] font-bold text-lilac">{b.roadmap.laterTitle}</div>
-          <div className="flex flex-wrap gap-1.5">
-            {b.roadmap.later.map((x) => (
-              <span key={x} className="chip opacity-70">
-                {x}
-              </span>
-            ))}
-          </div>
-          <p className="mt-3 text-[11px] leading-relaxed text-mute">{b.roadmap.laterNote}</p>
-        </div>
-      </Reveal>
-
       {/* ── пилот ───────────────────────────────────────────────────────── */}
       <Reveal>
-        <SectionHead n="06" label={b.pilot.label} note={b.pilot.note} />
+        <SectionHead n="05" label={b.pilot.label} note={b.pilot.note} />
         <div className="cell rounded-lg px-5 py-6 sm:px-7 sm:py-8">
           <p className="max-w-[720px] text-[18px] font-bold leading-snug text-white sm:text-[22px]">{b.pilot.headline}</p>
           <p className="mt-3 max-w-[720px] text-[12px] leading-relaxed text-dim">{b.pilot.body}</p>
