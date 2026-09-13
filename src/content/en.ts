@@ -432,7 +432,7 @@ export const en: Dict = {
     },
     calc: {
       label: 'calculator',
-      note: 'demo of the flagship feature · estimate',
+      note: '',
       title: 'own team vs outstaff — including downtime',
       intro:
         'a regular calculator prices your team as hours × rate. it does not see that the developer is already busy on another project: that project stalls, and context switching eats part of the time on both tasks.',
