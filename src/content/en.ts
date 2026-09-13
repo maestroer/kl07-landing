@@ -41,13 +41,15 @@ export const en: Dict = {
         ['modules', '7 / 7'],
         ['plans', '3'],
         ['team', '1 person'],
-        ['outside money', '0 ₽'],
       ],
     },
 
     donate: {
       window: 'kl07 ~ donate',
       trigger: 'support',
+      raisedLabel: 'raised for the project',
+      of: 'of',
+      button: 'support with crypto',
       heading: 'support the project',
       body: 'kl07 is being built without outside money. if you want to help — here are the project wallets. every amount goes into the deploy and the build.',
       hint: 'click an address to copy it',

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useDocMeta, useI18n } from '../i18n'
-import { site } from '../site'
+import { fundraising, site } from '../site'
 import { Chrome } from '../components/Chrome'
 import { DonateModal } from '../components/DonateModal'
 import { CopyMail, Mark, Reveal, SectionHead, Stat, Tag } from '../components/ui'
@@ -12,9 +12,6 @@ export default function Home() {
   const h = t.home
   const [donateOpen, setDonateOpen] = useState(false)
   useDocMeta(t.meta.homeTitle, t.meta.homeDesc)
-
-  const rows = h.statusPanel.rows
-  const lastIndex = rows.length - 1
 
   return (
     <Chrome title={t.chrome.home}>
@@ -55,49 +52,36 @@ export default function Home() {
           </div>
         </div>
 
-        {/* панель статуса: последняя строка открывает окно донатов */}
+        {/* панель статуса + прогресс сбора */}
         <div className="text-[12px] leading-relaxed">
           <div className="flex justify-between gap-4">
             <span className="font-bold text-orange">★ {h.statusPanel.star[0]}</span>
             <span className="font-bold text-white">{h.statusPanel.star[1]}</span>
           </div>
 
-          {rows.map(([k, v], i) => {
-            const isDonate = i === lastIndex
-            const branch = <span className="text-mute">{isDonate ? '└' : '├'}</span>
+          {h.statusPanel.rows.map(([k, v], i, arr) => (
+            <div key={k} className="mt-1 flex justify-between gap-4">
+              <span className="text-blu">
+                <span className="text-mute">{i === arr.length - 1 ? '└' : '├'}</span> {k}
+              </span>
+              <span className="text-lilac">{v}</span>
+            </div>
+          ))}
 
-            if (!isDonate) {
-              return (
-                <div key={k} className="mt-1 flex justify-between gap-4">
-                  <span className="text-blu">{branch} {k}</span>
-                  <span className="text-lilac">{v}</span>
-                </div>
-              )
-            }
-
-            return (
-              <button
-                key={k}
-                type="button"
-                onClick={() => setDonateOpen(true)}
-                className="group mt-1 flex w-full items-baseline justify-between gap-4 text-left"
-                title={h.donate.trigger}
-              >
-                <span className="text-blu transition-colors group-hover:text-orange">{branch} {k}</span>
-                <span className="flex items-baseline gap-1.5">
-                  <span className="text-lilac transition-colors group-hover:text-orange">{v}</span>
-                  <span className="text-mute transition-colors group-hover:text-orange">→</span>
-                </span>
-              </button>
-            )
-          })}
+          <DonateProgress
+            raised={fundraising.raised}
+            goal={fundraising.goal}
+            label={h.donate.raisedLabel}
+            of={h.donate.of}
+            locale={t.code === 'ru' ? 'ru-RU' : 'en-US'}
+          />
 
           <button
             type="button"
             onClick={() => setDonateOpen(true)}
-            className="mt-3 text-[11px] text-mute transition-colors hover:text-orange"
+            className="mt-3 w-full rounded-md border border-orange/60 bg-orange/15 px-4 py-2.5 text-[12px] font-bold text-orange transition-colors hover:bg-orange/25"
           >
-            {h.donate.trigger} →
+            {h.donate.button} →
           </button>
         </div>
       </section>
@@ -314,5 +298,52 @@ export default function Home() {
 
       {donateOpen && <DonateModal onClose={() => setDonateOpen(false)} />}
     </Chrome>
+  )
+}
+
+function DonateProgress({
+  raised,
+  goal,
+  label,
+  of,
+  locale,
+}: {
+  raised: number
+  goal: number
+  label: string
+  of: string
+  locale: string
+}) {
+  const pct = Math.min(100, Math.max(0, (raised / goal) * 100))
+  const fmt = (n: number) => `${n.toLocaleString(locale)} ₽`
+
+  return (
+    <div className="mt-5 border-t border-soft pt-4">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-blu">{label}</span>
+        <span className="font-bold text-orange">{Math.round(pct)}%</span>
+      </div>
+
+      <div
+        className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/[0.06]"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={goal}
+        aria-valuenow={raised}
+        aria-label={`${label}: ${fmt(raised)} ${of} ${fmt(goal)}`}
+      >
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-violet to-orange"
+          style={{ width: `${pct}%` }}
+        />
+      </div>
+
+      <div className="mt-2 flex items-baseline justify-between gap-3">
+        <span className="font-bold text-white">{fmt(raised)}</span>
+        <span className="text-mute">
+          {of} {fmt(goal)}
+        </span>
+      </div>
+    </div>
   )
 }

@@ -12,6 +12,12 @@ export const site = {
   deck: `${import.meta.env.BASE_URL}KL07_Presentation.pdf`,
 }
 
+/** Сбор донатов: обновляйте raised по мере поступлений. Суммы в рублях. */
+export const fundraising = {
+  raised: 484_000,
+  goal: 3_000_000,
+}
+
 export type Wallet = {
   /** тикер монеты: BTC, USDT, TON… */
   ticker: string
