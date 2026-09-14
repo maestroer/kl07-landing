@@ -328,17 +328,6 @@ export const en: Dict = {
       ],
     },
 
-    risks: {
-      label: 'risks',
-      note: 'open questions, no varnish',
-      items: [
-        'the product is not deployed anywhere — zero live users and zero conversion metrics',
-        'solo founder: some secondary features and file storage (avatars / pdf) are in the backlog',
-        'the funnel forecast in unit economics is modelled, with no historical data',
-        'payments, email and llm currently run on stub drivers and need live integration',
-      ],
-    },
-
     terms: {
       label: 'deal structures',
       note: 'three options',

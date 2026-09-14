@@ -151,22 +151,9 @@ export default function Invest() {
         </div>
       </Reveal>
 
-      {/* ── риски ───────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="05" label={v.risks.label} note={v.risks.note} />
-        <ul className="m-0 list-none space-y-2 p-0">
-          {v.risks.items.map((r) => (
-            <li key={r} className="flex gap-3 text-[12px] leading-relaxed text-dim">
-              <span className="mt-[6px] h-[5px] w-[5px] shrink-0 rounded-full bg-orange" />
-              <span>{r}</span>
-            </li>
-          ))}
-        </ul>
-      </Reveal>
-
       {/* ── условия ─────────────────────────────────────────────────────── */}
       <Reveal>
-        <SectionHead n="06" label={v.terms.label} note={v.terms.note} />
+        <SectionHead n="05" label={v.terms.label} note={v.terms.note} />
         <div className="grid gap-3 lg:grid-cols-3">
           {v.terms.items.map((item) => {
             const color =
@@ -219,7 +206,7 @@ export default function Invest() {
 
       {/* ── контакт ─────────────────────────────────────────────────────── */}
       <Reveal>
-        <SectionHead n="07" label={v.contact.label} note={v.contact.note} />
+        <SectionHead n="06" label={v.contact.label} note={v.contact.note} />
         <div className="cell rounded-lg px-5 py-6 sm:px-7 sm:py-8">
           <p className="max-w-[720px] text-[18px] font-bold leading-snug text-white sm:text-[22px]">
             {v.contact.headline}
