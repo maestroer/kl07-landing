@@ -411,7 +411,7 @@ export const en: Dict = {
   },
 
   b2b: {
-    tagline: 'kl07 b2b · cost & decision suite · in development',
+    tagline: 'kl07 b2b · cost & decision suite',
     headlineA: 'let us count what your own team',
     headlineB: 'really costs you',
     lead: [
@@ -419,7 +419,7 @@ export const en: Dict = {
       'kl07 b2b is a set of lenses on top of one calculation engine: the honest cost of "build it / skip it / who builds it"',
       'without a separate research round.',
     ],
-    status: 'the b2b block is in development — recruiting companies for a pilot',
+    status: 'onboarding the first companies into a pilot',
     ctaPilot: 'join the pilot on telegram',
     forWho: {
       label: 'for whom',
@@ -470,22 +470,32 @@ export const en: Dict = {
       ],
     },
     engine: {
-      label: 'one engine',
-      note: 'not 15 calculators, but presets of one estimate',
-      readyTag: 'live',
-      newTag: 'new',
-      ready: [
-        ['project', 'the existing project calculator'],
-        ['profitability', 'dashboard: kpi, margin, net/hour, workload'],
-        ['tools and subscriptions', 'subtracker'],
-        ['team: outstaff / instaff', 'calculator mode'],
-        ['rollout: build / buy / adapt', 'turnkey mode + a third "adapt" branch'],
-      ],
-      next: [
-        ['cost with your current team', 'including downtime and context switching — the flagship feature nobody else has'],
-        ['feature-level calculator', 'estimate a single feature to prioritise the backlog; features roll up into a project quote'],
-        ['llm orchestrator', 'describe the task in words — the model picks a preset and calls the engine; numbers always come from the calculation, not a model guess'],
-        ['tools per team', 'subtracker aggregating subscriptions across the whole team'],
+      label: 'tools',
+      note: 'all on one estimation engine · live',
+      groups: [
+        {
+          title: 'cost and team',
+          items: [
+            ['cost with your current team', 'including downtime of other projects and the context-switch tax — the flagship feature nobody else has'],
+            ['team and allocation', 'team card: who works on which project and at what share — the foundation of an honest calculation'],
+            ['feature-level calculator', 'estimate a single feature to prioritise the backlog; features roll up into a project quote'],
+            ['team: outstaff / instaff', 'your own team compared with external contractors'],
+            ['rollout: build / buy / adapt', 'build it, buy it or adapt it — in money'],
+            ['project and profitability', 'project calculator and dashboard: kpi, margin, net/hour, workload'],
+            ['tools per team', 'subscriptions and services aggregated across the whole team, not a single account'],
+            ['gpu cluster cost', 'cost of your own ai infrastructure on cloud instances'],
+          ],
+        },
+        {
+          title: 'decisions and discovery',
+          items: [
+            ['llm orchestrator', 'describe the task in words — the model picks the calculation and calls the engine; numbers always come from the calculation, not a model guess'],
+            ['ai idea analyser', 'breaks down a product or feature idea before development starts'],
+            ['necessity validator', 'helps decide whether a feature is needed at all before budget goes into it'],
+            ['discovery manager', 'structures discovery: checklists, interview templates, hypothesis tracking'],
+            ['cross-team impact estimator', 'shows how one team task affects the workload and deadlines of other teams'],
+          ],
+        },
       ],
     },
     pilot: {

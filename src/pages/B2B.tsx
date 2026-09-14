@@ -199,32 +199,24 @@ export default function B2B() {
         </ol>
       </Reveal>
 
-      {/* ── один движок ─────────────────────────────────────────────────── */}
+      {/* ── инструменты ─────────────────────────────────────────────────── */}
       <Reveal>
         <SectionHead n="04" label={b.engine.label} note={b.engine.note} />
         <div className="grid gap-3 lg:grid-cols-2">
-          <div className="cell rounded-lg">
-            {b.engine.next.map(([title, text], i) => (
-              <div key={title} className={`px-4 py-3 ${i ? 'border-t border-soft' : ''}`}>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-bold text-white">{title}</span>
-                  <Tag tone="orange">{b.engine.newTag}</Tag>
+          {b.engine.groups.map((g) => (
+            <div key={g.title} className="cell self-start rounded-lg">
+              <div className="border-b border-soft px-4 py-3 text-[12px] font-bold text-lilac">{g.title}</div>
+              {g.items.map(([title, text], i) => (
+                <div key={title} className={`px-4 py-3 ${i ? 'border-t border-soft' : ''}`}>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-grn">✓</span>
+                    <span className="font-bold text-white">{title}</span>
+                  </div>
+                  <div className="mt-1 pl-5 text-[12px] leading-relaxed text-dim">{text}</div>
                 </div>
-                <div className="mt-1 text-[12px] leading-relaxed text-dim">{text}</div>
-              </div>
-            ))}
-          </div>
-          <div className="cell rounded-lg">
-            {b.engine.ready.map(([title, text], i) => (
-              <div key={title} className={`px-4 py-3 ${i ? 'border-t border-soft' : ''}`}>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-bold text-txt">{title}</span>
-                  <Tag tone="green">{b.engine.readyTag}</Tag>
-                </div>
-                <div className="mt-1 text-[12px] leading-relaxed text-dim">{text}</div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ))}
         </div>
       </Reveal>
 
