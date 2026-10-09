@@ -4,7 +4,7 @@ import { useDocMeta, useI18n } from '../i18n'
 import { fundraising, site } from '../site'
 import { Chrome } from '../components/Chrome'
 import { DonateModal } from '../components/DonateModal'
-import { CopyMail, Mark, Reveal, SectionHead, Stat, Tag } from '../components/ui'
+import { CopyMail, Mark, Reveal, SectionHead, Tag } from '../components/ui'
 import { Waitlist } from '../components/Waitlist'
 
 export default function Home() {
@@ -246,35 +246,9 @@ export default function Home() {
         </div>
       </Reveal>
 
-      {/* ── статус ──────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="06" label={h.status.label} note={h.status.note} />
-        <p className="text-[22px] font-bold leading-tight text-white sm:text-[28px]">
-          {h.status.headlineA} <Mark>{h.status.headlineB}</Mark>
-        </p>
-
-        <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_320px]">
-          <div className="cell rounded-lg px-4 py-4">
-            {h.status.log.map(([k, v]) => (
-              <div key={k} className="flex flex-col gap-x-4 py-1 text-[12px] sm:flex-row">
-                <span className="w-[168px] shrink-0 text-blu">{k}</span>
-                <span className="text-dim">{v}</span>
-              </div>
-            ))}
-          </div>
-          <div className="space-y-3">
-            {h.status.stats.map(([v, hint], i) => (
-              <Stat key={v} value={v} hint={hint} tone={i === 1 ? 'white' : i === 2 ? 'orange' : 'violet'} />
-            ))}
-          </div>
-        </div>
-
-        <p className="mt-4 max-w-[760px] text-[12px] leading-relaxed text-mute">{h.status.left}</p>
-      </Reveal>
-
       {/* ── вейтлист ────────────────────────────────────────────────────── */}
       <Reveal>
-        <SectionHead n="07" label={h.cta.label} note={h.cta.note} />
+        <SectionHead n="06" label={h.cta.label} note={h.cta.note} />
         <p className="mb-3 text-[22px] font-bold leading-tight text-white sm:text-[26px]">{h.cta.headline}</p>
         <div className="mb-6 max-w-[720px] space-y-0.5 text-[12px] leading-relaxed text-dim">
           {h.cta.body.map((line) => (

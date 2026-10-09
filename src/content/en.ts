@@ -213,26 +213,6 @@ export const en: Dict = {
       ],
     },
 
-    status: {
-      label: 'build status',
-      note: 'honestly, as of today',
-      headlineA: 'the product already works,',
-      headlineB: 'it is not a mockup',
-      log: [
-        ['first commit', '03.08.2026'],
-        ['current frontend', 'rewritten from scratch 19–20.08.2026 (liquid glass)'],
-        ['backend', 'fastify + drizzle + postgresql, live api'],
-        ['frontend', 'react 18 + vite + tailwind'],
-        ['design system', 'liquid glass — in-house, one visual language'],
-      ],
-      stats: [
-        ['7 / 7', 'screens wired to the live api'],
-        ['18 days', 'from first commit to the current version'],
-        ['0 ₽', 'outside money — the mvp was built by the founder alone'],
-      ],
-      left: 'still to do: production deploy (railway + vercel, runbook ready) and live payment / email / llm integrations.',
-    },
-
     cta: {
       label: 'early access',
       note: 'waitlist',
