@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Bot, Boxes, Check, Cpu, Lightbulb, ListChecks, Send, Users } from 'lucide-react'
+import { Boxes, Check, Cpu, ListChecks, MessageSquare, Search, Send, Users } from 'lucide-react'
 import { AnimatedCounter } from '@/components/arc/animated-counter/animated-counter'
 import { Badge } from '@/components/arc/badge/badge'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
@@ -76,8 +76,8 @@ export default function B2B() {
     { id: 'a', x: 0.17, y: 0.16, label: cost0.items[0][0], icon: <Users size={16} /> },
     { id: 'b', x: 0.12, y: 0.5, label: cost0.items[2][0], icon: <ListChecks size={16} /> },
     { id: 'c', x: 0.17, y: 0.82, label: cost0.items[4][0], icon: <Boxes size={16} /> },
-    { id: 'd', x: 0.83, y: 0.16, label: decide.items[0][0], icon: <Bot size={16} /> },
-    { id: 'e', x: 0.88, y: 0.5, label: decide.items[1][0], icon: <Lightbulb size={16} /> },
+    { id: 'd', x: 0.83, y: 0.16, label: decide.items[0][0], icon: <MessageSquare size={16} /> },
+    { id: 'e', x: 0.88, y: 0.5, label: decide.items[1][0], icon: <Search size={16} /> },
     { id: 'f', x: 0.83, y: 0.82, label: decide.items[3][0], icon: <ListChecks size={16} /> },
   ]
 
@@ -85,8 +85,7 @@ export default function B2B() {
     <Shell>
       {/* ── шапка ───────────────────────────────────────────────────────── */}
       <section>
-        <Badge tone="info">{b.tagline}</Badge>
-        <h1 className="display mt-6 max-w-[18ch] text-[clamp(2.25rem,6vw,4.5rem)] font-semibold text-foreground">
+        <h1 className="display max-w-[18ch] text-[clamp(2.25rem,6vw,4.5rem)] font-semibold text-foreground">
           {b.headlineA} <Ink>{b.headlineB}</Ink>
         </h1>
         <p className="mt-6 max-w-[68ch] text-lg text-secondary">{b.lead.join(' ')}</p>
@@ -94,7 +93,7 @@ export default function B2B() {
           <LinkButton variant="primary" size="lg" href={site.tgUrl}>
             <Send size={16} /> {b.ctaPilot}
           </LinkButton>
-          <Badge tone="success">{b.status}</Badge>
+          <Badge tone="neutral">{b.status}</Badge>
         </div>
       </section>
 

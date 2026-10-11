@@ -63,7 +63,7 @@ export function FlowBoard({
           pulseSpeed={2.4}
           gridColor={dark ? 'rgba(255,255,255,0.06)' : 'rgba(20,20,30,0.07)'}
           traceColor={dark ? 'rgba(255,255,255,0.22)' : 'rgba(20,20,30,0.2)'}
-          pulseColor={dark ? '#a78bff' : '#7747ff'}
+          pulseColor={dark ? 'rgba(255,255,255,0.9)' : 'rgba(20,20,20,0.8)'}
           nodes={nodes.map((n) => ({
             id: n.id,
             x: Math.round(n.x * width),

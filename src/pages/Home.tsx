@@ -10,7 +10,7 @@ import {
   Minus,
   Repeat,
   Send,
-  Sparkles,
+  MessageSquare,
   User,
 } from 'lucide-react'
 import { AnnouncementBar } from '@/components/arc/announcement-bar/announcement-bar'
@@ -34,7 +34,7 @@ import { DonateDialog } from '@/components/DonateDialog'
 import { FlowBoard, type FlowLink, type FlowNode } from '@/components/FlowBoard'
 import { Ink, LinkButton, Point, Section, Surface } from '@/components/kit'
 import { Shell } from '@/components/Shell'
-import { Waitlist } from '@/components/Waitlist'
+import { AccessRequest } from '@/components/AccessRequest'
 import { useDocMeta, useI18n } from '@/i18n'
 import { fundraising, site } from '@/site'
 import { cn } from '@/lib/utils'
@@ -71,7 +71,7 @@ export default function Home() {
   // инвойсы, проекты, сабтрекер, ai-архитектор, профиль.
   const m = h.modules.items
   const flowNodes: FlowNode[] = [
-    { id: 'ai', x: 0.07, y: 0.52, label: m[5].name, icon: <Sparkles size={18} />, status: 'processing', size: 'lg' },
+    { id: 'ai', x: 0.07, y: 0.52, label: m[5].name, icon: <MessageSquare size={18} />, status: 'processing', size: 'lg' },
     { id: 'calc', x: 0.29, y: 0.52, label: m[1].name, icon: <Calculator size={16} /> },
     { id: 'profile', x: 0.51, y: 0.14, label: m[6].name, icon: <User size={12} />, size: 'sm' },
     { id: 'projects', x: 0.51, y: 0.52, label: m[3].name, icon: <FolderKanban size={18} />, size: 'lg' },
@@ -144,7 +144,7 @@ export default function Home() {
             <dl className="m-0 grid grid-cols-[1fr_auto] gap-y-1.5 text-sm">
               <dt className="font-semibold text-foreground">{h.statusPanel.star[0]}</dt>
               <dd className="m-0">
-                <Badge tone="success" size="sm">
+                <Badge tone="neutral" size="sm">
                   {h.statusPanel.star[1]}
                 </Badge>
               </dd>
@@ -336,12 +336,12 @@ export default function Home() {
 
       {/* ── ранний доступ ───────────────────────────────────────────────── */}
       <Section n="06" id="early-access" label={h.cta.label} title={h.cta.headline} note={h.cta.body.join(' ')}>
-        <Waitlist />
+        <AccessRequest />
       </Section>
 
       {/* ── переход на инвест-страницу ──────────────────────────────────── */}
       <Surface muted className="mt-16 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
-        <Badge tone="warning">{h.investBanner.label}</Badge>
+        <Badge tone="neutral">{h.investBanner.label}</Badge>
         <p className="m-0 flex-1 text-base text-secondary">{h.investBanner.text}</p>
         <LinkButton variant="primary" to="/invest">
           {h.investBanner.link} <ArrowRight size={16} />

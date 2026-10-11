@@ -2,12 +2,6 @@ export const site = {
   tg: '@lk07ru',
   tgUrl: 'https://t.me/lk07ru',
   email: 'kl07business@gmail.com',
-  /**
-   * Куда уходит заявка из вейтлиста.
-   * Задаётся через .env: VITE_WAITLIST_ENDPOINT=https://formspree.io/f/xxxxx
-   * Если не задан — форма падает в mailto-фолбэк и всё равно доводит лид.
-   */
-  waitlistEndpoint: (import.meta.env.VITE_WAITLIST_ENDPOINT as string | undefined) || '',
   onepager: `${import.meta.env.BASE_URL}KL07_OnePager.pdf`,
   deck: `${import.meta.env.BASE_URL}KL07_Presentation.pdf`,
 }

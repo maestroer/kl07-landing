@@ -39,8 +39,7 @@ export default function Invest() {
     <Shell>
       {/* ── шапка ───────────────────────────────────────────────────────── */}
       <section>
-        <Badge tone="warning">{v.tagline}</Badge>
-        <h1 className="display mt-6 max-w-[16ch] text-[clamp(2.25rem,6vw,4.5rem)] font-semibold text-foreground">
+        <h1 className="display max-w-[16ch] text-[clamp(2.25rem,6vw,4.5rem)] font-semibold text-foreground">
           {v.headlineA} <Ink>{v.headlineB}</Ink>
         </h1>
         <p className="mt-6 max-w-[68ch] text-lg text-secondary">{v.lead.join(' ')}</p>
@@ -122,7 +121,7 @@ export default function Invest() {
               formatValue={(n) => `${n}K`}
               formatTick={(n) => `${n}K`}
               data={line(MRR, 'mrr')}
-              series={[{ key: 'mrr', label: v.forecast.mrrTitle, color: '#e8825f' }]}
+              series={[{ key: 'mrr', label: v.forecast.mrrTitle }]}
             />
           </Surface>
           <Surface>
@@ -178,7 +177,7 @@ export default function Invest() {
               <Surface key={item.key} className={cn('flex flex-col', featured && 'border-[color:var(--accent)] shadow-raised')}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="text-sm text-muted">{item.key}</span>
-                  <Badge size="sm" tone={featured ? 'info' : item.accent === 'orange' ? 'warning' : 'neutral'}>
+                  <Badge size="sm" tone="neutral">
                     {item.badge}
                   </Badge>
                 </div>

@@ -321,25 +321,23 @@ export const en: Dict = {
 
     cta: {
       label: 'early access',
-      note: 'waitlist',
+      note: 'request by email',
       headline: 'take the early access',
       body: [
-        'the product ships to production with the next release. leave your email — you get access in the first wave',
-        'and we lock the launch price of pro for your first year.',
+        'the product ships to production with the next release. email me — you get access in the first wave',
+        'and i lock the launch price of pro for your first year.',
       ],
-      emailLabel: 'your email',
-      emailPlaceholder: 'you@mail.com',
-      segmentLabel: 'you are',
-      segments: ['freelancer', 'team', 'agency', 'investor'],
-      submit: 'join',
-      sending: 'sending…',
-      ok: 'done — you are on the list. we will write as soon as access opens.',
-      err: 'did not go through. message us directly on telegram — that always lands.',
-      invalid: 'check the email',
+      to: 'to',
+      subjectLabel: 'subject',
+      subject: 'I want to test KL07',
+      template:
+        'Hello! I would like to test KL07.\n\nWho I am: freelancer / team / agency\nWhat I do: \nWhat I want to calculate first: ',
+      copy: 'copy address and text',
+      open: 'open in mail',
+      hint: 'the address, subject and message go to your clipboard — paste them and add a couple of lines about yourself',
       or: 'or right away',
       tg: 'message on telegram',
     },
-
     investBanner: {
       label: 'for investors',
       text: 'unit economics, development status and three deal structures',

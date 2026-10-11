@@ -1,11 +1,10 @@
 import { useMemo, useState } from 'react'
-import { ArrowDownRight, ArrowUpRight, Check, FileText, ShieldCheck, Sparkles } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight, Check, FileText, ShieldCheck } from 'lucide-react'
 import { AnimatedCounter } from '@/components/arc/animated-counter/animated-counter'
 import { Badge } from '@/components/arc/badge/badge'
 import { LineChart } from '@/components/arc/line-chart/line-chart'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { Slider } from '@/components/arc/slider/slider'
-import { TextShimmer } from '@/components/arc/text-shimmer/text-shimmer'
 import { Tags } from '@/components/kit'
 import { useI18n } from '@/i18n'
 import { cn } from '@/lib/utils'
@@ -245,11 +244,6 @@ export function ArchitectDemo() {
         {a.prompt}
       </div>
 
-      <div className="mt-4 flex items-center gap-2 text-sm">
-        <Sparkles size={16} className="text-accent-strong" aria-hidden="true" />
-        <TextShimmer>{a.thinking}</TextShimmer>
-      </div>
-
       <dl className="m-0 mt-4 rounded-panel border border-line">
         {a.rows.map(([k, v], i) => (
           <div key={k} className={cn('flex gap-4 px-4 py-3 text-sm', i > 0 && 'border-t border-line-subtle')}>
@@ -260,7 +254,7 @@ export function ArchitectDemo() {
       </dl>
 
       <div className="mt-4">
-        <Badge tone="success" icon={<Check size={12} />}>
+        <Badge tone="neutral" icon={<Check size={12} />}>
           {a.saved}
         </Badge>
       </div>
@@ -280,7 +274,7 @@ export function InvoiceDemo() {
           <div className="display text-base font-semibold text-foreground">{v.no}</div>
           <div className="text-sm text-muted">{v.client}</div>
         </div>
-        <Badge tone="warning">{v.status}</Badge>
+        <Badge tone="neutral">{v.status}</Badge>
       </div>
 
       <ul className="m-0 mt-5 list-none p-0 text-sm">
@@ -335,7 +329,7 @@ export function SubtrackerDemo() {
                 {s.next} {date}
               </span>
             ) : (
-              <Badge tone="danger" size="sm">
+              <Badge tone="neutral" size="sm">
                 {s.unused}
               </Badge>
             )}
@@ -349,7 +343,7 @@ export function SubtrackerDemo() {
 
 /* ── проекты ───────────────────────────────────────────────────────────── */
 
-const STATUS_TONE = ['info', 'neutral', 'success'] as const
+const STATUS_TONE = ['neutral', 'neutral', 'neutral'] as const
 
 export function ProjectsDemo() {
   const { t } = useI18n()
@@ -384,15 +378,15 @@ export function ProfileDemo() {
     <Panel>
       <div className="flex items-center justify-between gap-3 text-sm">
         <span className="flex items-center gap-2 text-foreground">
-          <ShieldCheck size={16} className="text-success" aria-hidden="true" /> {p.twofa}
+          <ShieldCheck size={16} className="text-secondary" aria-hidden="true" /> {p.twofa}
         </span>
-        <Badge tone="success" size="sm">
+        <Badge tone="neutral" size="sm">
           {p.on}
         </Badge>
       </div>
       <div className="mt-3 flex items-center justify-between gap-3 border-t border-line-subtle pt-3 text-sm">
         <span className="text-foreground">{p.plan}</span>
-        <Badge tone="info" size="sm">
+        <Badge tone="neutral" size="sm">
           {p.planVal}
         </Badge>
       </div>

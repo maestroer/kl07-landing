@@ -21,24 +21,18 @@ body {
 
 ::selection { background: var(--accent-subtle); }
 
-/* Мягкая лавандово-персиковая заливка за шапкой — фирменный градиент Arc. */
+/* Спокойная нейтральная подложка за шапкой: от приглушённой поверхности к фону. */
 .wash {
   position: absolute;
   inset: 0 0 auto 0;
-  height: 720px;
+  height: 640px;
   z-index: 0;
   pointer-events: none;
-  background: var(--arc-gradient-soft);
-  mask-image: linear-gradient(to bottom, #000 30%, transparent);
+  background: linear-gradient(to bottom, var(--surface-muted), transparent);
 }
 
-/* Градиентные чернила для акцентных слов в заголовках. */
-.ink {
-  background: var(--arc-gradient-ink);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
+/* Вторая половина заголовка уходит в серый — двухтоновый заголовок вместо цветного акцента. */
+.ink { color: var(--text-muted); }
 
 .display {
   font-family: var(--font-display);
