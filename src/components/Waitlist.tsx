@@ -1,6 +1,10 @@
 import { useState } from 'react'
-import { useI18n } from '../i18n'
-import { site } from '../site'
+import { Button } from '@/components/arc/button/button'
+import { ChipGroup } from '@/components/arc/chip-group/chip-group'
+import { Input } from '@/components/arc/input/input'
+import { Surface } from '@/components/kit'
+import { useI18n } from '@/i18n'
+import { site } from '@/site'
 
 type State = 'idle' | 'sending' | 'ok' | 'err'
 
@@ -11,7 +15,7 @@ export function Waitlist() {
   const c = t.home.cta
 
   const [email, setEmail] = useState('')
-  const [segment, setSegment] = useState(c.segments[0])
+  const [segment, setSegment] = useState<string[]>([c.segments[0]])
   const [state, setState] = useState<State>('idle')
   const [msg, setMsg] = useState('')
 
@@ -28,7 +32,12 @@ export function Waitlist() {
     setState('sending')
     setMsg('')
 
-    const payload = { email: email.trim(), segment, source: 'kl07-landing', at: new Date().toISOString() }
+    const payload = {
+      email: email.trim(),
+      segment: segment[0] ?? '',
+      source: 'kl07-landing',
+      at: new Date().toISOString(),
+    }
 
     // Бэкенда пока нет: если endpoint не задан — уводим лид в письмо, чтобы он не потерялся.
     if (!site.waitlistEndpoint) {
@@ -55,67 +64,57 @@ export function Waitlist() {
     }
   }
 
+  const invalid = state === 'err' && msg === c.invalid
+
   return (
-    <form onSubmit={submit} className="cell rounded-lg p-5 sm:p-6">
-      <div className="mb-5 grid gap-6 sm:grid-cols-[1fr_auto] sm:items-end">
-        <div>
-          <label htmlFor="wl-email" className="mb-2 block text-[11px] uppercase tracking-wider text-mute">
-            {c.emailLabel}
-          </label>
-          <div className="flex items-center gap-2 border-b border-soft pb-2 focus-within:border-violet/60">
-            <span className="text-grn">›</span>
-            <input
-              id="wl-email"
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value)
-                if (state === 'err') setState('idle')
-              }}
-              placeholder={c.emailPlaceholder}
-              className="w-full bg-transparent text-[15px] text-white outline-none placeholder:text-mute"
-            />
-          </div>
+    <Surface>
+      <form onSubmit={submit} noValidate className="flex flex-col gap-6">
+        <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
+          <Input
+            label={c.emailLabel}
+            type="email"
+            inputMode="email"
+            autoComplete="email"
+            placeholder={c.emailPlaceholder}
+            value={email}
+            error={invalid ? msg : undefined}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              if (state === 'err') setState('idle')
+            }}
+          />
+          <Button type="submit" variant="primary" size="lg" loading={state === 'sending'}>
+            {state === 'sending' ? c.sending : c.submit}
+          </Button>
         </div>
 
-        <button
-          type="submit"
-          disabled={state === 'sending'}
-          className="w-full rounded-md border border-violet/60 bg-violet/15 px-6 py-3 text-[13px] font-bold text-lilac transition-colors hover:border-orange/70 hover:bg-orange/15 hover:text-orange disabled:opacity-50 sm:w-auto"
-        >
-          {state === 'sending' ? c.sending : c.submit}
-        </button>
-      </div>
+        <div className="flex flex-col gap-2">
+          <span className="text-sm text-muted">{c.segmentLabel}</span>
+          <ChipGroup
+            label={c.segmentLabel}
+            options={c.segments.map((s) => ({ value: s, label: s }))}
+            value={segment}
+            onValueChange={setSegment}
+          />
+        </div>
 
-      <div className="mb-4 flex flex-wrap items-center gap-2">
-        <span className="mr-1 text-[11px] uppercase tracking-wider text-mute">{c.segmentLabel}</span>
-        {c.segments.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => setSegment(s)}
-            className={`chip transition-colors ${
-              segment === s ? 'border-orange/60 bg-orange/12 text-orange' : 'opacity-70 hover:opacity-100'
-            }`}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px]">
-        {msg && <span className={state === 'ok' ? 'text-grn' : 'text-orange'}>{msg}</span>}
-        {state !== 'ok' && (
-          <>
-            <span className="text-mute">{c.or}</span>
-            <a href={site.tgUrl} target="_blank" rel="noreferrer noopener" className="link">
-              {c.tg}
-            </a>
-          </>
-        )}
-      </div>
-    </form>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm" aria-live="polite">
+          {msg && !invalid && <span className={state === 'ok' ? 'text-success' : 'text-danger'}>{msg}</span>}
+          {state !== 'ok' && (
+            <>
+              <span className="text-muted">{c.or}</span>
+              <a
+                href={site.tgUrl}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-accent-strong underline-offset-4 hover:underline"
+              >
+                {c.tg}
+              </a>
+            </>
+          )}
+        </div>
+      </form>
+    </Surface>
   )
 }

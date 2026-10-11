@@ -1,242 +1,237 @@
-import { Link } from 'react-router-dom'
-import { useDocMeta, useI18n } from '../i18n'
-import { site } from '../site'
-import { Chrome } from '../components/Chrome'
-import { BarChart, LineChart } from '../components/Charts'
-import { Mark, Reveal, SectionHead, Stat, Tag } from '../components/ui'
+import { ArrowLeft, FileDown, Mail, Send } from 'lucide-react'
+import { Badge } from '@/components/arc/badge/badge'
+import { BarChart } from '@/components/arc/bar-chart/bar-chart'
+import { LineChart } from '@/components/arc/line-chart/line-chart'
+import { Ink, LinkButton, Point, Section, Surface } from '@/components/kit'
+import { Shell } from '@/components/Shell'
+import { useDocMeta, useI18n } from '@/i18n'
+import { site } from '@/site'
+import { cn } from '@/lib/utils'
+
+// Модельный прогноз из презентации проекта.
+const MONTHS = [6, 8, 10, 12, 14, 16, 18]
+const USERS = [75, 120, 150, 260, 340, 420, 500]
+const MRR = [110, 176, 220, 381, 498, 615, 733]
+const MARGIN_MONTHS = [9, 12, 14, 16, 18]
+const MARGIN = [12, 94, 153, 194, 250]
+const PROFIT = [0.3, 0.9, 1.9, 3.2, 4.4]
 
 export default function Invest() {
   const { t } = useI18n()
   const v = t.invest
   useDocMeta(t.meta.investTitle, t.meta.investDesc)
 
-  const m = v.forecast.monthShort
-  const months = [6, 8, 10, 12, 14, 16, 18]
-  const users = [75, 120, 150, 260, 340, 420, 500]
-  const mrr = [110, 176, 220, 381, 498, 615, 733]
-  const marginMonths = [9, 12, 14, 16, 18]
-  const margin = [12, 94, 153, 194, 250]
-  const profit = [0.3, 0.9, 1.9, 3.2, 4.4]
+  const mo = v.forecast.monthShort
+  const period = `${mo} ${MARGIN_MONTHS[0]}–${MARGIN_MONTHS[MARGIN_MONTHS.length - 1]}`
 
-  const axis: [string, string, string] = [`${m} 6`, `${m} 12`, `${m} 18`]
+  const line = (values: number[], key: string) =>
+    MONTHS.map((m, i) => ({
+      key: `m${m}`,
+      label: `${mo} ${m}`,
+      axisLabel: i % 3 === 0 ? `${mo} ${m}` : undefined,
+      values: { [key]: values[i] },
+    }))
+
+  const bars = (values: number[]) =>
+    MARGIN_MONTHS.map((m, i) => ({ key: `m${m}`, label: `${mo} ${m}`, axisLabel: String(m), value: values[i] }))
 
   return (
-    <Chrome title={t.chrome.invest}>
+    <Shell>
       {/* ── шапка ───────────────────────────────────────────────────────── */}
       <section>
-        <p className="text-[12px] text-dim">{v.tagline}</p>
-        <h1 className="mt-4 text-[32px] font-bold leading-tight tracking-tight text-white sm:text-[44px]">
-          {v.headlineA}
-          <br />
-          <Mark>{v.headlineB}</Mark>
+        <Badge tone="warning">{v.tagline}</Badge>
+        <h1 className="display mt-6 max-w-[16ch] text-[clamp(2.25rem,6vw,4.5rem)] font-semibold text-foreground">
+          {v.headlineA} <Ink>{v.headlineB}</Ink>
         </h1>
-
-        <div className="mt-6 max-w-[760px] space-y-0.5 text-[13px] leading-relaxed text-txt">
-          {v.lead.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
-        </div>
-
-        <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 text-[12px]">
-          <span className="text-mute">{v.docs.label}</span>
-          <a href={site.onepager} target="_blank" rel="noreferrer noopener" className="link">
-            {v.docs.onepager}
-          </a>
-          <a href={site.deck} target="_blank" rel="noreferrer noopener" className="link">
-            {v.docs.deck}
-          </a>
+        <p className="mt-6 max-w-[68ch] text-lg text-secondary">{v.lead.join(' ')}</p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <LinkButton variant="primary" size="lg" href={site.tgUrl}>
+            <Send size={16} /> {v.contact.tg}
+          </LinkButton>
+          <LinkButton variant="secondary" size="lg" href={site.onepager}>
+            <FileDown size={16} /> {v.docs.onepager}
+          </LinkButton>
+          <LinkButton variant="secondary" size="lg" href={site.deck}>
+            <FileDown size={16} /> {v.docs.deck}
+          </LinkButton>
         </div>
       </section>
 
       {/* ── профайл ─────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="01" label={v.profile.label} note={v.profile.note} />
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {v.profile.cells.map(([label, value, hint], i) => (
-            <Stat
-              key={label}
-              label={label}
-              value={value}
-              hint={hint}
-              tone={i === 3 || i === 5 ? 'orange' : i === 1 ? 'white' : 'violet'}
-            />
+      <Section n="01" label={v.profile.label} title={v.profile.note}>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {v.profile.cells.map(([label, value, hint]) => (
+            <Surface key={label} className="!p-6">
+              <div className="text-sm text-muted">{label}</div>
+              <div className="display tnum mt-2 text-[2rem] font-semibold leading-tight text-foreground">{value}</div>
+              <div className="mt-1 text-sm text-secondary">{hint}</div>
+            </Surface>
           ))}
         </div>
-      </Reveal>
+      </Section>
 
       {/* ── рынок ───────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="02" label={v.market.label} note={v.market.note} />
-        <div className="cell overflow-x-auto rounded-lg">
-          <table className="w-full min-w-[520px] border-collapse text-[12px]">
+      <Section n="02" label={v.market.label} title={`${v.market.label} ${v.market.note}`}>
+        <Surface className="overflow-x-auto !p-0">
+          <table className="w-full min-w-[560px] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-soft">
-                <th className="px-4 py-3 text-left text-[11px] uppercase tracking-wider text-mute">
+              <tr>
+                <th scope="col" className="px-6 py-4 text-left font-normal text-muted">
                   {v.market.head[0]}
                 </th>
-                <th className="px-4 py-3 text-right text-[11px] uppercase tracking-wider text-mute">
+                <th scope="col" className="px-6 py-4 text-right font-normal text-muted">
                   {v.market.head[1]}
                 </th>
               </tr>
             </thead>
             <tbody>
               {v.market.rows.map(([k, val]) => (
-                <tr key={k} className="border-b border-soft last:border-0">
-                  <td className="px-4 py-3 text-txt">{k}</td>
-                  <td className="whitespace-nowrap px-4 py-3 text-right font-bold text-lilac">{val}</td>
+                <tr key={k} className="border-t border-line-subtle">
+                  <th scope="row" className="px-6 py-3.5 text-left font-normal text-secondary">
+                    {k}
+                  </th>
+                  <td className="tnum px-6 py-3.5 text-right font-medium text-foreground">{val}</td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </Surface>
+      </Section>
+
+      {/* ── юнит-экономика ──────────────────────────────────────────────── */}
+      <Section n="03" label={v.forecast.label} title={v.forecast.punch.join(' ')} note={v.forecast.note}>
+        <div className="grid gap-4 lg:grid-cols-2">
+          <Surface>
+            <h3 className="display m-0 mb-4 text-base font-semibold text-foreground">{v.forecast.usersTitle}</h3>
+            <LineChart
+              label={v.forecast.usersTitle}
+              categoryLabel={t.ui.months}
+              height={240}
+              legend={false}
+              data={line(USERS, 'users')}
+              series={[{ key: 'users', label: v.forecast.usersTitle }]}
+            />
+          </Surface>
+          <Surface>
+            <h3 className="display m-0 mb-4 text-base font-semibold text-foreground">{v.forecast.mrrTitle}</h3>
+            <LineChart
+              label={v.forecast.mrrTitle}
+              categoryLabel={t.ui.months}
+              height={240}
+              legend={false}
+              formatValue={(n) => `${n}K`}
+              formatTick={(n) => `${n}K`}
+              data={line(MRR, 'mrr')}
+              series={[{ key: 'mrr', label: v.forecast.mrrTitle, color: '#e8825f' }]}
+            />
+          </Surface>
+          <Surface>
+            <h3 className="display m-0 mb-4 text-base font-semibold text-foreground">{v.forecast.marginTitle}</h3>
+            <BarChart
+              label={v.forecast.marginTitle}
+              period={period}
+              averageLabel={t.ui.avg}
+              valueLabel={t.ui.atPoint}
+              showAverage={false}
+              categoryLabel={t.ui.months}
+              height={220}
+              formatValue={(n) => `${Math.round(n)}%`}
+              data={bars(MARGIN)}
+            />
+          </Surface>
+          <Surface>
+            <h3 className="display m-0 mb-4 text-base font-semibold text-foreground">{v.forecast.profitTitle}</h3>
+            <BarChart
+              label={v.forecast.profitTitle}
+              period={period}
+              averageLabel={t.ui.avg}
+              valueLabel={t.ui.atPoint}
+              showAverage={false}
+              categoryLabel={t.ui.months}
+              height={220}
+              formatValue={(n) => `${n.toFixed(1)}M`}
+              data={bars(PROFIT)}
+            />
+          </Surface>
         </div>
-      </Reveal>
 
-      {/* ── прогноз ─────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="03" label={v.forecast.label} note={v.forecast.note} />
-
-        <div className="grid gap-8 lg:grid-cols-2 lg:gap-10">
-          <LineChart
-            title={v.forecast.usersTitle}
-            axis={axis}
-            color="#8b7cf6"
-            points={months.map((mo, i) => ({ x: `m${mo}`, v: users[i], label: String(users[i]) }))}
-          />
-          <LineChart
-            title={v.forecast.mrrTitle}
-            axis={axis}
-            color="#e8825f"
-            points={months.map((mo, i) => ({ x: `m${mo}`, v: mrr[i], label: `${mrr[i]}K` }))}
-          />
-        </div>
-
-        <p className="mt-8 text-[18px] font-bold leading-snug text-white sm:text-[24px]">
-          {v.forecast.punch[0]} <Mark>{v.forecast.punch[1]}</Mark> {v.forecast.punch[2]}{' '}
-          <Mark tone="violet">{v.forecast.punch[3]}</Mark> {v.forecast.punch[4]}
+        <p className="display mt-10 max-w-[30ch] text-[clamp(1.375rem,3vw,2rem)] font-medium text-foreground">
+          {v.forecast.punch2A} <Ink>{v.forecast.punch2B}</Ink>, {v.forecast.punch2C} <Ink>{v.forecast.punch2D}</Ink>
         </p>
-
-        <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:gap-10">
-          <BarChart
-            title={v.forecast.marginTitle}
-            color="#8b7cf6"
-            points={marginMonths.map((mo, i) => ({ x: String(mo), v: margin[i], label: `${margin[i]}%` }))}
-          />
-          <BarChart
-            title={v.forecast.profitTitle}
-            color="#e8825f"
-            points={marginMonths.map((mo, i) => ({
-              x: String(mo),
-              v: profit[i],
-              label: `${profit[i].toFixed(1)}M`,
-            }))}
-          />
-        </div>
-
-        <p className="mt-8 text-[18px] font-bold leading-snug text-white sm:text-[22px]">
-          {v.forecast.punch2A} <Mark>{v.forecast.punch2B}</Mark>, {v.forecast.punch2C}{' '}
-          <Mark>{v.forecast.punch2D}</Mark>
-        </p>
-      </Reveal>
+      </Section>
 
       {/* ── сильные стороны ─────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="04" label={v.strengths.label} note={v.strengths.note} />
-        <div className="grid gap-3 sm:grid-cols-2">
+      <Section n="04" label={v.strengths.label} title={v.strengths.note}>
+        <div className="grid gap-4 sm:grid-cols-2">
           {v.strengths.items.map(([title, text]) => (
-            <div key={title} className="cell rounded-lg px-4 py-4">
-              <div className="mb-1.5 font-bold text-white">{title}</div>
-              <div className="text-[12px] leading-relaxed text-dim">{text}</div>
-            </div>
+            <Point key={title} title={title} text={text} />
           ))}
         </div>
-      </Reveal>
+      </Section>
 
       {/* ── условия ─────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="05" label={v.terms.label} note={v.terms.note} />
-        <div className="grid gap-3 lg:grid-cols-3">
+      <Section n="05" label={v.terms.label} title={`${v.terms.label}: ${v.terms.note}`}>
+        <div className="grid gap-4 lg:grid-cols-3">
           {v.terms.items.map((item) => {
-            const color =
-              item.accent === 'violet' ? 'text-lilac' : item.accent === 'orange' ? 'text-orange' : 'text-white'
+            const featured = item.accent === 'violet'
             return (
-              <div
-                key={item.key}
-                className={`cell flex flex-col rounded-lg px-5 py-5 ${
-                  item.accent === 'violet' ? 'border-violet/35' : ''
-                }`}
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[11px] uppercase tracking-wider text-mute">{item.key}</span>
-                  <Tag tone={item.accent === 'orange' ? 'orange' : item.accent === 'violet' ? 'violet' : 'green'}>
+              <Surface key={item.key} className={cn('flex flex-col', featured && 'border-[color:var(--accent)] shadow-raised')}>
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="text-sm text-muted">{item.key}</span>
+                  <Badge size="sm" tone={featured ? 'info' : item.accent === 'orange' ? 'warning' : 'neutral'}>
                     {item.badge}
-                  </Tag>
+                  </Badge>
                 </div>
+                <h3 className="display m-0 mt-3 text-2xl font-semibold text-foreground">{item.name}</h3>
+                <div className="display tnum mt-1 text-lg font-medium text-accent-strong">{item.amount}</div>
 
-                <div className={`mt-2 text-[18px] font-bold leading-tight ${color}`}>{item.name}</div>
-                <div className="mt-1 text-[15px] font-bold text-white">{item.amount}</div>
+                <p className="mt-5 text-sm leading-relaxed text-secondary">{item.text}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{item.text2}</p>
 
-                <p className="mt-4 text-[12px] leading-relaxed text-txt">{item.text}</p>
-                <p className="mt-3 text-[12px] leading-relaxed text-dim">{item.text2}</p>
-
-                <div className="mt-auto space-y-1 border-t border-soft pt-4 text-[12px]">
+                <dl className="m-0 mt-auto grid grid-cols-[1fr_auto] gap-y-1.5 border-t border-line-subtle pt-5 text-sm">
                   {item.facts.map(([k, val]) => (
-                    <div key={k} className="flex justify-between gap-3">
-                      <span className="text-mute">{k}</span>
-                      <span className="text-right font-bold text-txt">{val}</span>
+                    <div key={k} className="contents">
+                      <dt className="text-muted">{k}</dt>
+                      <dd className="m-0 text-right font-medium text-foreground">{val}</dd>
                     </div>
                   ))}
-                </div>
-              </div>
+                </dl>
+              </Surface>
             )
           })}
         </div>
 
-        <div className="mt-6">
-          <div className="mb-3 text-[12px] font-bold text-white">{v.terms.allTitle}</div>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {v.terms.all.map(([title, text]) => (
-              <div key={title} className="cell rounded-lg px-4 py-4">
-                <div className="mb-1 font-bold text-lilac">{title}</div>
-                <div className="text-[12px] leading-relaxed text-dim">{text}</div>
-              </div>
-            ))}
-          </div>
+        <h3 className="display mb-4 mt-10 text-lg font-semibold text-foreground">{v.terms.allTitle}</h3>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {v.terms.all.map(([title, text]) => (
+            <Point key={title} title={title} text={text} />
+          ))}
         </div>
-      </Reveal>
+      </Section>
 
       {/* ── контакт ─────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="06" label={v.contact.label} note={v.contact.note} />
-        <div className="cell rounded-lg px-5 py-6 sm:px-7 sm:py-8">
-          <p className="max-w-[720px] text-[18px] font-bold leading-snug text-white sm:text-[22px]">
-            {v.contact.headline}
-          </p>
-          <p className="mt-3 max-w-[720px] text-[12px] leading-relaxed text-dim">{v.contact.body}</p>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={site.tgUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="rounded-md border border-orange/60 bg-orange/15 px-6 py-3 text-center text-[13px] font-bold text-orange transition-colors hover:bg-orange/25"
-            >
-              {v.contact.tg} — {site.tg}
-            </a>
-            <a
-              href={`mailto:${site.email}?subject=${encodeURIComponent(v.contact.mailSubject)}`}
-              className="rounded-md border border-line px-6 py-3 text-center text-[13px] font-bold text-lilac transition-colors hover:border-violet/60 hover:bg-violet/10"
-            >
-              {v.contact.mail}
-            </a>
-          </div>
+      <Section n="06" label={v.contact.label} title={v.contact.headline} note={v.contact.body}>
+        <div className="flex flex-wrap items-center gap-3">
+          <LinkButton variant="primary" size="lg" href={site.tgUrl}>
+            <Send size={16} /> {v.contact.tg} — {site.tg}
+          </LinkButton>
+          <LinkButton
+            variant="secondary"
+            size="lg"
+            href={`mailto:${site.email}?subject=${encodeURIComponent(v.contact.mailSubject)}`}
+          >
+            <Mail size={16} /> {v.contact.mail}
+          </LinkButton>
         </div>
 
-        <p className="mt-6 max-w-[860px] text-[11px] leading-relaxed text-mute">{v.disclaimer}</p>
+        <p className="mt-8 max-w-[90ch] text-xs leading-relaxed text-muted">{v.disclaimer}</p>
 
-        <Link to="/" className="link mt-8 inline-block text-[12px]">
-          ← {t.nav.back}
-        </Link>
-      </Reveal>
-    </Chrome>
+        <div className="mt-8">
+          <LinkButton variant="ghost" to="/">
+            <ArrowLeft size={16} /> {t.nav.back}
+          </LinkButton>
+        </div>
+      </Section>
+    </Shell>
   )
 }

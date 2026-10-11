@@ -1,120 +1,205 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useDocMeta, useI18n } from '../i18n'
-import { fundraising, site } from '../site'
-import { Chrome } from '../components/Chrome'
-import { DonateModal } from '../components/DonateModal'
-import { CopyMail, Mark, Reveal, SectionHead, Tag } from '../components/ui'
-import { Waitlist } from '../components/Waitlist'
+import { useNavigate } from 'react-router-dom'
+import {
+  ArrowRight,
+  Calculator,
+  Check,
+  FileText,
+  FolderKanban,
+  LayoutDashboard,
+  Minus,
+  Repeat,
+  Send,
+  Sparkles,
+  User,
+} from 'lucide-react'
+import { AnnouncementBar } from '@/components/arc/announcement-bar/announcement-bar'
+import { Badge } from '@/components/arc/badge/badge'
+import { BillingPrice, BillingToggle } from '@/components/arc/billing-toggle/billing-toggle'
+import { Button } from '@/components/arc/button/button'
+import { CopyButton } from '@/components/arc/copy-button/copy-button'
+import { Progress } from '@/components/arc/progress/progress'
+import { LetterCascade } from '@/components/ui/letter-cascade'
+import { MagnetLines } from '@/components/ui/magnet-lines'
+import { DonateDialog } from '@/components/DonateDialog'
+import { FlowBoard, type FlowLink, type FlowNode } from '@/components/FlowBoard'
+import { Ink, LinkButton, Point, Section, Surface, Tags } from '@/components/kit'
+import { Shell } from '@/components/Shell'
+import { Waitlist } from '@/components/Waitlist'
+import { useDocMeta, useI18n } from '@/i18n'
+import { fundraising, site } from '@/site'
+import { cn } from '@/lib/utils'
+
+// Цена за месяц: [при оплате за год, при помесячной оплате]. Порядок как у тарифов в словаре.
+const PRICES: [number, number][] = [
+  [0, 0],
+  [790, 990],
+  [2290, 2890],
+]
+
+const FLOW_LINKS: FlowLink[] = [
+  { from: 'ai', to: 'calc' },
+  { from: 'calc', to: 'projects' },
+  { from: 'profile', to: 'projects' },
+  { from: 'projects', to: 'invoices' },
+  { from: 'projects', to: 'subs' },
+  { from: 'invoices', to: 'dash' },
+  { from: 'subs', to: 'dash' },
+]
 
 export default function Home() {
   const { t } = useI18n()
   const h = t.home
+  const navigate = useNavigate()
   const [donateOpen, setDonateOpen] = useState(false)
+  const [billing, setBilling] = useState('year')
   useDocMeta(t.meta.homeTitle, t.meta.homeDesc)
 
-  return (
-    <Chrome title={t.chrome.home}>
-      {/* ── шапка ───────────────────────────────────────────────────────── */}
-      <section className="grid gap-10 lg:grid-cols-[1fr_280px] lg:gap-12">
-        <div>
-          <h1 className="text-[42px] font-bold leading-none tracking-tight text-white sm:text-[56px]">
-            KL<span className="text-violet">07</span>
-          </h1>
-          <p className="mt-3 text-[13px] text-dim">{h.tagline}</p>
+  const locale = t.code === 'ru' ? 'ru-RU' : 'en-US'
+  const rub = (n: number) => `${n.toLocaleString(locale)} ₽`
 
-          <p className="mt-6 max-w-[560px] text-[17px] font-bold leading-snug text-white sm:text-[19px]">
-            {h.headline[0]} <Mark>{h.headline[1]}</Mark>
+  // Узлы схемы названы так же, как модули в словаре: порядок items — дашборд, калькулятор,
+  // инвойсы, проекты, сабтрекер, ai-архитектор, профиль.
+  const m = h.modules.items
+  const flowNodes: FlowNode[] = [
+    { id: 'ai', x: 0.07, y: 0.52, label: m[5].name, icon: <Sparkles size={18} />, status: 'processing', size: 'lg' },
+    { id: 'calc', x: 0.29, y: 0.52, label: m[1].name, icon: <Calculator size={16} /> },
+    { id: 'profile', x: 0.51, y: 0.14, label: m[6].name, icon: <User size={12} />, size: 'sm' },
+    { id: 'projects', x: 0.51, y: 0.52, label: m[3].name, icon: <FolderKanban size={18} />, size: 'lg' },
+    { id: 'invoices', x: 0.73, y: 0.22, label: m[2].name, icon: <FileText size={16} /> },
+    { id: 'subs', x: 0.73, y: 0.8, label: m[4].name, icon: <Repeat size={16} /> },
+    { id: 'dash', x: 0.93, y: 0.52, label: m[0].name, icon: <LayoutDashboard size={16} /> },
+  ]
+
+  return (
+    <Shell
+      banner={
+        <AnnouncementBar
+          id="kl07-b2b"
+          label={t.nav.b2b}
+          messages={[
+            {
+              id: 'b2b',
+              message: t.ui.announce,
+              action: { label: t.ui.announceCta, onClick: () => navigate('/b2b') },
+            },
+          ]}
+        />
+      }
+    >
+      {/* ── шапка ───────────────────────────────────────────────────────── */}
+      <section className="grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+        <div>
+          <Badge tone="info">{h.tagline}</Badge>
+
+          <h1 className="mt-6">
+            <LetterCascade
+              text="KL07"
+              staggerFrom="center"
+              className="display text-[clamp(4.5rem,13vw,9rem)] font-semibold leading-[0.9] text-foreground"
+            />
+          </h1>
+
+          <p className="display mt-6 max-w-[22ch] text-[clamp(1.5rem,3.4vw,2.25rem)] font-medium text-foreground">
+            {h.headline[0]} <Ink>{h.headline[1]}</Ink>
           </p>
 
-          <div className="mt-7 space-y-1.5">
+          <dl className="mt-8 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-[auto_1fr]">
             {h.whoami.map(([k, v]) => (
-              <div key={k} className="flex flex-col gap-x-4 sm:flex-row">
-                <span className="w-[120px] shrink-0 text-blu">{k}</span>
-                <span className="text-txt">{v}</span>
+              <div key={k} className="contents">
+                <dt className="text-muted">{k}</dt>
+                <dd className="m-0 text-secondary">{v}</dd>
               </div>
             ))}
-            <div className="flex flex-col gap-x-4 pt-1 sm:flex-row">
-              <span className="w-[120px] shrink-0 text-blu">{h.findme}</span>
-              <span className="flex flex-wrap gap-x-3">
-                <a href={site.tgUrl} target="_blank" rel="noreferrer noopener" className="link">
-                  [telegram]
-                </a>
-                <CopyMail
-                  value={site.email}
-                  label="email"
-                  hint={h.copyMail.hint}
-                  copiedText={h.copyMail.copied}
-                  manualText={h.copyMail.manual}
-                />
-              </span>
-            </div>
+          </dl>
+
+          <div className="mt-9 flex flex-wrap items-center gap-3">
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={() => document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              {h.cta.label} <ArrowRight size={16} />
+            </Button>
+            <LinkButton variant="secondary" size="lg" href={site.tgUrl}>
+              <Send size={16} /> telegram
+            </LinkButton>
+            <CopyButton value={site.email} label={site.email} />
           </div>
         </div>
 
-        {/* панель статуса + прогресс сбора */}
-        <div className="text-[12px] leading-relaxed">
-          <div className="flex justify-between gap-4">
-            <span className="font-bold text-orange">★ {h.statusPanel.star[0]}</span>
-            <span className="font-bold text-white">{h.statusPanel.star[1]}</span>
-          </div>
+        <div className="flex flex-col gap-4">
+          <Surface muted className="hidden aspect-[5/4] items-center justify-center overflow-hidden lg:flex">
+            <MagnetLines
+              rows={8}
+              columns={10}
+              containerSize="100%"
+              lineColor="var(--text-muted)"
+              lineWidth="3px"
+              lineHeight="28px"
+              baseAngle={-12}
+              className="h-full"
+            />
+          </Surface>
 
-          {h.statusPanel.rows.map(([k, v], i, arr) => (
-            <div key={k} className="mt-1 flex justify-between gap-4">
-              <span className="text-blu">
-                <span className="text-mute">{i === arr.length - 1 ? '└' : '├'}</span> {k}
-              </span>
-              <span className="text-lilac">{v}</span>
+          <Surface className="flex flex-col gap-5">
+            <dl className="m-0 grid grid-cols-[1fr_auto] gap-y-1.5 text-sm">
+              <dt className="font-semibold text-foreground">{h.statusPanel.star[0]}</dt>
+              <dd className="m-0">
+                <Badge tone="success" size="sm">
+                  {h.statusPanel.star[1]}
+                </Badge>
+              </dd>
+              {h.statusPanel.rows.map(([k, v]) => (
+                <div key={k} className="contents">
+                  <dt className="text-muted">{k}</dt>
+                  <dd className="tnum m-0 text-right text-secondary">{v}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <div className="border-t border-line-subtle pt-5">
+              <Progress value={fundraising.raised} max={fundraising.goal} label={h.donate.raisedLabel} showValue />
+              <div className="mt-2 flex items-baseline justify-between gap-3 text-sm">
+                <span className="tnum font-semibold text-foreground">{rub(fundraising.raised)}</span>
+                <span className="tnum text-muted">
+                  {h.donate.of} {rub(fundraising.goal)}
+                </span>
+              </div>
             </div>
-          ))}
 
-          <DonateProgress
-            raised={fundraising.raised}
-            goal={fundraising.goal}
-            label={h.donate.raisedLabel}
-            of={h.donate.of}
-            locale={t.code === 'ru' ? 'ru-RU' : 'en-US'}
-          />
-
-          <button
-            type="button"
-            onClick={() => setDonateOpen(true)}
-            className="mt-3 w-full rounded-md border border-orange/60 bg-orange/15 px-4 py-2.5 text-[12px] font-bold text-orange transition-colors hover:bg-orange/25"
-          >
-            {h.donate.button} →
-          </button>
+            <Button variant="secondary" onClick={() => setDonateOpen(true)}>
+              {h.donate.button} <ArrowRight size={16} />
+            </Button>
+          </Surface>
         </div>
       </section>
 
       {/* ── проблема ────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="01" label={h.problem.label} note={h.problem.note} />
-        <div className="max-w-[760px] space-y-0.5 text-txt">
-          {h.problem.body.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
-        </div>
-
-        <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <Section n="01" label={h.problem.label} title={h.problem.note} note={h.problem.body.join(' ')}>
+        <div className="grid gap-4 sm:grid-cols-2">
           {h.problem.pains.map(([title, text]) => (
-            <div key={title} className="cell rounded-lg px-4 py-4">
-              <div className="mb-1 font-bold text-white">{title}</div>
-              <div className="text-[12px] leading-relaxed text-dim">{text}</div>
-            </div>
+            <Point key={title} title={title} text={text} />
           ))}
         </div>
-      </Reveal>
+      </Section>
 
       {/* ── сравнение ───────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="02" label={h.compare.label} note={h.compare.note} />
-        <div className="cell overflow-x-auto rounded-lg">
-          <table className="w-full min-w-[560px] border-collapse text-[12px]">
+      <Section n="02" label={h.compare.label} title={h.compare.note}>
+        <Surface className="overflow-x-auto !p-0">
+          <table className="w-full min-w-[620px] border-collapse text-sm">
             <thead>
-              <tr className="border-b border-soft">
-                <th className="px-4 py-3 text-left font-normal text-mute" />
+              <tr>
+                <th className="px-6 py-4 text-left font-normal text-muted" />
                 {h.compare.cols.map((c, i) => (
-                  <th key={c} className={`px-3 py-3 text-center font-bold ${i === 0 ? 'text-lilac' : 'text-dim'}`}>
+                  <th
+                    key={c}
+                    scope="col"
+                    className={cn(
+                      'px-4 py-4 text-center',
+                      i === 0 ? 'display text-base font-semibold text-foreground' : 'font-normal text-muted',
+                    )}
+                  >
                     {c}
                   </th>
                 ))}
@@ -124,14 +209,20 @@ export default function Home() {
               {h.compare.rows.map((row) => {
                 const [name, ...cells] = row
                 return (
-                  <tr key={name as string} className="border-b border-soft last:border-0">
-                    <td className="px-4 py-2.5 text-txt">{name}</td>
+                  <tr key={name as string} className="border-t border-line-subtle">
+                    <th scope="row" className="px-6 py-3.5 text-left font-normal text-secondary">
+                      {name}
+                    </th>
                     {(cells as number[]).map((v, i) => (
-                      <td key={i} className="px-3 py-2.5 text-center">
+                      <td key={i} className={cn('px-4 py-3.5 text-center', i === 0 && 'bg-accent-subtle')}>
                         {v ? (
-                          <span className={i === 0 ? 'font-bold text-grn' : 'text-dim'}>✓</span>
+                          <Check
+                            size={18}
+                            className={cn('inline', i === 0 ? 'text-accent-strong' : 'text-muted')}
+                            aria-label="✓"
+                          />
                         ) : (
-                          <span className="text-mute">—</span>
+                          <Minus size={16} className="inline text-line-strong" aria-label="—" />
                         )}
                       </td>
                     ))}
@@ -140,184 +231,122 @@ export default function Home() {
               })}
             </tbody>
           </table>
-        </div>
-        <p className="mt-3 max-w-[760px] text-[11px] leading-relaxed text-mute">{h.compare.footnote}</p>
-      </Reveal>
+        </Surface>
+        <p className="mt-4 max-w-[78ch] text-xs leading-relaxed text-muted">{h.compare.footnote}</p>
+      </Section>
 
       {/* ── модули ──────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="03" label={h.modules.label} note={h.modules.note} />
-        <div className="space-y-3">
-          {h.modules.items.map((m) => (
-            <div key={m.name} className="cell rounded-lg px-4 py-4 sm:px-5">
-              <div className="flex flex-wrap items-baseline gap-x-3">
-                <span className="text-[15px] font-bold text-white">{m.name}</span>
-                <span className="text-[12px] text-orange">{m.kind}</span>
+      <Section n="03" label={h.modules.label} title={t.ui.flowTitle} note={h.modules.note}>
+        <Surface muted className="mb-4 !px-4 !pb-10 !pt-4">
+          <FlowBoard nodes={flowNodes} links={FLOW_LINKS} label={t.ui.flowTitle} />
+          <p className="mt-8 text-center text-sm text-muted">{t.ui.flowNote}</p>
+        </Surface>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          {m.map((mod, i) => (
+            <Surface key={mod.name} className={cn('flex flex-col gap-3', i === 1 && 'md:row-span-2')}>
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h3 className="display text-xl font-semibold text-foreground">{mod.name}</h3>
+                <span className="text-sm text-accent-strong">{mod.kind}</span>
               </div>
-              <p className="mt-2 max-w-[760px] text-[12px] leading-relaxed text-dim">{m.text}</p>
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {m.tags.map((tag) => (
-                  <Tag key={tag}>{tag}</Tag>
-                ))}
+              <p className="text-sm leading-relaxed text-secondary">{mod.text}</p>
+              <div className="mt-auto pt-2">
+                <Tags items={mod.tags} />
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
-      </Reveal>
+      </Section>
 
       {/* ── ai-архитектор ───────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="04" label={h.ai.label} note={h.ai.note} />
-        <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-12">
-          <div>
-            <h2 className="text-[24px] font-bold leading-tight text-white sm:text-[30px]">
-              AI-<Mark tone="violet">{t.words.architect}</Mark>
-            </h2>
-            <p className="mt-4 max-w-[520px] text-[15px] font-bold leading-snug text-white">
-              {h.ai.headline[0]}
-              <br />
-              {h.ai.headline[1]}
-            </p>
-            <div className="mt-4 max-w-[520px] space-y-0.5 text-[12px] leading-relaxed text-dim">
-              {h.ai.body.map((line) => (
-                <p key={line}>{line}</p>
-              ))}
-            </div>
-          </div>
-
-          <ol className="m-0 list-none space-y-5 p-0">
-            {h.ai.steps.map(([title, text], i) => (
-              <li key={title} className="flex gap-4">
-                <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded border text-[12px] font-bold ${
-                    i === 2 ? 'border-orange/50 bg-orange/12 text-orange' : 'border-violet/50 bg-violet/12 text-lilac'
-                  }`}
-                >
-                  {i + 1}
-                </span>
-                <span>
-                  <span className="block font-bold text-white">{title}</span>
-                  <span className="block text-[12px] leading-relaxed text-dim">{text}</span>
-                </span>
-              </li>
-            ))}
-          </ol>
-        </div>
-
-        <p className="mt-10 text-[18px] font-bold leading-snug text-white sm:text-[24px]">
-          {h.ai.punchA} <Mark>{h.ai.punchB}</Mark>
+      <Section
+        n="04"
+        label={h.ai.label}
+        title={`${h.ai.headline[0]} ${h.ai.headline[1]}`}
+        note={h.ai.body.join(' ')}
+      >
+        <ol className="m-0 grid list-none gap-4 p-0 md:grid-cols-3">
+          {h.ai.steps.map(([title, text], i) => (
+            <li key={title}>
+              <Point title={title} text={text} index={i + 1} />
+            </li>
+          ))}
+        </ol>
+        <p className="display mt-10 max-w-[26ch] text-[clamp(1.5rem,3.4vw,2.25rem)] font-medium text-foreground">
+          {h.ai.punchA} <Ink>{h.ai.punchB}</Ink>
         </p>
-      </Reveal>
+      </Section>
 
       {/* ── тарифы ──────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="05" label={h.pricing.label} note={h.pricing.note} />
-        <div className="grid gap-3 md:grid-cols-3">
-          {h.pricing.plans.map((p) => {
-            const color = p.accent === 'violet' ? 'text-lilac' : p.accent === 'orange' ? 'text-orange' : 'text-white'
+      <Section n="05" label={h.pricing.label} title={h.pricing.note}>
+        <div className="mb-6">
+          <BillingToggle
+            value={billing}
+            onValueChange={setBilling}
+            label={t.ui.billing}
+            options={[
+              { value: 'year', label: t.ui.yearly, badge: '−20%' },
+              { value: 'month', label: t.ui.monthly },
+            ]}
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          {h.pricing.plans.map((p, i) => {
+            const [yearly, monthly] = PRICES[i]
+            const free = monthly === 0
+            const featured = i === 1
             return (
-              <div
+              <Surface
                 key={p.name}
-                className={`cell flex flex-col rounded-lg px-5 py-5 ${p.accent === 'violet' ? 'border-violet/30' : ''}`}
+                className={cn('flex flex-col', featured && 'border-[color:var(--accent)] shadow-raised')}
               >
-                <div className="text-[11px] uppercase tracking-wider text-mute">{t.words.plan}</div>
-                <div className={`mt-1 text-[20px] font-bold ${color}`}>{p.name}</div>
+                <h3 className="display text-2xl font-semibold text-foreground">{p.name}</h3>
 
-                <div className={`mt-4 text-[30px] font-bold leading-none ${color}`}>
-                  {p.price}
-                  <span className="text-[14px] font-normal text-dim">{p.per}</span>
+                <div className="mt-5 text-foreground">
+                  <BillingPrice
+                    amount={billing === 'year' ? yearly : monthly}
+                    currency=""
+                    period={t.ui.perMonth}
+                    locale={locale}
+                    was={billing === 'year' && monthly > yearly ? monthly : undefined}
+                  />
                 </div>
-                <div className="mt-1.5 text-[11px] text-orange">{p.priceNote}</div>
-                {p.alt && <div className="mt-0.5 text-[11px] text-mute">{p.alt}</div>}
+                <p className="mt-1 text-xs text-muted">
+                  {free ? t.ui.forever : billing === 'year' ? t.ui.yearlyNote : t.ui.monthlyNote}
+                </p>
 
-                <p className="mt-5 min-h-[48px] text-[12px] leading-relaxed text-dim">{p.text}</p>
+                <p className="mt-5 min-h-[3.5rem] text-sm leading-relaxed text-secondary">{p.text}</p>
 
-                <ul className="mt-4 space-y-1.5 border-t border-soft pt-4 text-[12px] text-txt">
+                <ul className="m-0 mt-5 flex list-none flex-col gap-2 border-t border-line-subtle p-0 pt-5 text-sm text-secondary">
                   {p.feats.map((f) => (
-                    <li key={f} className="flex gap-2">
-                      <span className="text-grn">✓</span>
+                    <li key={f} className="flex gap-2.5">
+                      <Check size={16} className="mt-0.5 shrink-0 text-accent-strong" aria-hidden="true" />
                       <span>{f}</span>
                     </li>
                   ))}
                 </ul>
-              </div>
+              </Surface>
             )
           })}
         </div>
-      </Reveal>
+      </Section>
 
-      {/* ── вейтлист ────────────────────────────────────────────────────── */}
-      <Reveal>
-        <SectionHead n="06" label={h.cta.label} note={h.cta.note} />
-        <p className="mb-3 text-[22px] font-bold leading-tight text-white sm:text-[26px]">{h.cta.headline}</p>
-        <div className="mb-6 max-w-[720px] space-y-0.5 text-[12px] leading-relaxed text-dim">
-          {h.cta.body.map((line) => (
-            <p key={line}>{line}</p>
-          ))}
-        </div>
+      {/* ── ранний доступ ───────────────────────────────────────────────── */}
+      <Section n="06" id="early-access" label={h.cta.label} title={h.cta.headline} note={h.cta.body.join(' ')}>
         <Waitlist />
-      </Reveal>
+      </Section>
 
       {/* ── переход на инвест-страницу ──────────────────────────────────── */}
-      <Reveal>
-        <Link
-          to="/invest"
-          className="mt-16 flex flex-col gap-2 rounded-lg border border-line bg-violet/[0.04] px-5 py-5 transition-colors hover:border-orange/50 hover:bg-orange/[0.05] sm:flex-row sm:items-center sm:gap-6"
-        >
-          <span className="chip chip-o shrink-0">{h.investBanner.label}</span>
-          <span className="flex-1 text-[13px] text-txt">{h.investBanner.text}</span>
-          <span className="shrink-0 font-bold text-lilac">{h.investBanner.link} →</span>
-        </Link>
-      </Reveal>
+      <Surface muted className="mt-16 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+        <Badge tone="warning">{h.investBanner.label}</Badge>
+        <p className="m-0 flex-1 text-base text-secondary">{h.investBanner.text}</p>
+        <LinkButton variant="primary" to="/invest">
+          {h.investBanner.link} <ArrowRight size={16} />
+        </LinkButton>
+      </Surface>
 
-      {donateOpen && <DonateModal onClose={() => setDonateOpen(false)} />}
-    </Chrome>
-  )
-}
-
-function DonateProgress({
-  raised,
-  goal,
-  label,
-  of,
-  locale,
-}: {
-  raised: number
-  goal: number
-  label: string
-  of: string
-  locale: string
-}) {
-  const pct = Math.min(100, Math.max(0, (raised / goal) * 100))
-  const fmt = (n: number) => `${n.toLocaleString(locale)} ₽`
-
-  return (
-    <div className="mt-5 border-t border-soft pt-4">
-      <div className="flex items-baseline justify-between gap-3">
-        <span className="text-blu">{label}</span>
-        <span className="font-bold text-orange">{Math.round(pct)}%</span>
-      </div>
-
-      <div
-        className="mt-2 h-2 w-full overflow-hidden rounded-full bg-white/[0.06]"
-        role="progressbar"
-        aria-valuemin={0}
-        aria-valuemax={goal}
-        aria-valuenow={raised}
-        aria-label={`${label}: ${fmt(raised)} ${of} ${fmt(goal)}`}
-      >
-        <div
-          className="h-full rounded-full bg-gradient-to-r from-violet to-orange"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-
-      <div className="mt-2 flex items-baseline justify-between gap-3">
-        <span className="font-bold text-white">{fmt(raised)}</span>
-        <span className="text-mute">
-          {of} {fmt(goal)}
-        </span>
-      </div>
-    </div>
+      <DonateDialog open={donateOpen} onOpenChange={setDonateOpen} />
+    </Shell>
   )
 }
