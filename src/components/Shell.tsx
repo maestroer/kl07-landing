@@ -68,7 +68,7 @@ export function Shell({ children, banner }: { children: React.ReactNode; banner?
             </Button>
             <span className="hidden sm:inline-flex">
               <LinkButton variant="primary" size="sm" href={site.tgUrl}>
-                <Send size={14} /> {site.tg}
+                <Send size={14} /> {t.nav.tg}
               </LinkButton>
             </span>
           </div>
@@ -91,7 +91,7 @@ export function Shell({ children, banner }: { children: React.ReactNode; banner?
             rel="noreferrer noopener"
             className="text-secondary underline-offset-4 hover:text-foreground hover:underline sm:ml-auto"
           >
-            {site.tg}
+            {t.nav.tg}
           </a>
         </div>
       </footer>

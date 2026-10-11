@@ -20,10 +20,19 @@ import { Button } from '@/components/arc/button/button'
 import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { Progress } from '@/components/arc/progress/progress'
 import { LetterCascade } from '@/components/ui/letter-cascade'
-import { MagnetLines } from '@/components/ui/magnet-lines'
+import {
+  ArchitectDemo,
+  CalculatorDemo,
+  DashboardDemo,
+  InvoiceDemo,
+  ProfileDemo,
+  ProjectsDemo,
+  Showcase,
+  SubtrackerDemo,
+} from '@/components/demos'
 import { DonateDialog } from '@/components/DonateDialog'
 import { FlowBoard, type FlowLink, type FlowNode } from '@/components/FlowBoard'
-import { Ink, LinkButton, Point, Section, Surface, Tags } from '@/components/kit'
+import { Ink, LinkButton, Point, Section, Surface } from '@/components/kit'
 import { Shell } from '@/components/Shell'
 import { Waitlist } from '@/components/Waitlist'
 import { useDocMeta, useI18n } from '@/i18n'
@@ -90,9 +99,7 @@ export default function Home() {
       {/* ── шапка ───────────────────────────────────────────────────────── */}
       <section className="grid items-start gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
         <div>
-          <Badge tone="info">{h.tagline}</Badge>
-
-          <h1 className="mt-6">
+          <h1>
             <LetterCascade
               text="KL07"
               staggerFrom="center"
@@ -122,25 +129,16 @@ export default function Home() {
               {h.cta.label} <ArrowRight size={16} />
             </Button>
             <LinkButton variant="secondary" size="lg" href={site.tgUrl}>
-              <Send size={16} /> telegram
+              <Send size={16} /> {t.nav.tg}
             </LinkButton>
-            <CopyButton value={site.email} label={site.email} />
+            <CopyButton value={site.email} label="email" />
           </div>
         </div>
 
         <div className="flex flex-col gap-4">
-          <Surface muted className="hidden aspect-[5/4] items-center justify-center overflow-hidden lg:flex">
-            <MagnetLines
-              rows={8}
-              columns={10}
-              containerSize="100%"
-              lineColor="var(--text-muted)"
-              lineWidth="3px"
-              lineHeight="28px"
-              baseAngle={-12}
-              className="h-full"
-            />
-          </Surface>
+          <div className="rounded-[2.5rem] bg-surface-muted p-3 sm:p-5">
+            <DashboardDemo compact />
+          </div>
 
           <Surface className="flex flex-col gap-5">
             <dl className="m-0 grid grid-cols-[1fr_auto] gap-y-1.5 text-sm">
@@ -242,20 +240,24 @@ export default function Home() {
           <p className="mt-8 text-center text-sm text-muted">{t.ui.flowNote}</p>
         </Surface>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          {m.map((mod, i) => (
-            <Surface key={mod.name} className={cn('flex flex-col gap-3', i === 1 && 'md:row-span-2')}>
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h3 className="display text-xl font-semibold text-foreground">{mod.name}</h3>
-                <span className="text-sm text-accent-strong">{mod.kind}</span>
-              </div>
-              <p className="text-sm leading-relaxed text-secondary">{mod.text}</p>
-              <div className="mt-auto pt-2">
-                <Tags items={mod.tags} />
-              </div>
-            </Surface>
+        <div className="mt-10 grid gap-x-4 gap-y-12 lg:grid-cols-2">
+          {(
+            [
+              [0, <DashboardDemo key="d" />, 'lg:col-span-2'],
+              [1, <CalculatorDemo key="c" />, ''],
+              [5, <ArchitectDemo key="a" />, ''],
+              [2, <InvoiceDemo key="i" />, ''],
+              [4, <SubtrackerDemo key="s" />, ''],
+              [3, <ProjectsDemo key="p" />, ''],
+              [6, <ProfileDemo key="u" />, ''],
+            ] as [number, React.ReactNode, string][]
+          ).map(([i, demo, span]) => (
+            <Showcase key={m[i].name} name={m[i].name} kind={m[i].kind} text={m[i].text} tags={m[i].tags} className={span}>
+              {demo}
+            </Showcase>
           ))}
         </div>
+        <p className="mt-8 text-xs text-muted">{t.demo.note}</p>
       </Section>
 
       {/* ── ai-архитектор ───────────────────────────────────────────────── */}

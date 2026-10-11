@@ -1,6 +1,6 @@
 export const site = {
-  tg: '@mercydetka',
-  tgUrl: 'https://t.me/mercydetka',
+  tg: '@lk07ru',
+  tgUrl: 'https://t.me/lk07ru',
   email: 'kl07business@gmail.com',
   /**
    * Куда уходит заявка из вейтлиста.

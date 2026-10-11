@@ -228,7 +228,7 @@ export default function B2B() {
       {/* ── пилот ───────────────────────────────────────────────────────── */}
       <Section n="05" label={b.pilot.label} title={b.pilot.headline} note={b.pilot.body}>
         <LinkButton variant="primary" size="lg" href={site.tgUrl}>
-          <Send size={16} /> {b.pilot.tg} — {site.tg}
+          <Send size={16} /> {b.pilot.tg}
         </LinkButton>
       </Section>
     </Shell>

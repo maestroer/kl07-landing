@@ -213,7 +213,7 @@ export default function Invest() {
       <Section n="06" label={v.contact.label} title={v.contact.headline} note={v.contact.body}>
         <div className="flex flex-wrap items-center gap-3">
           <LinkButton variant="primary" size="lg" href={site.tgUrl}>
-            <Send size={16} /> {v.contact.tg} — {site.tg}
+            <Send size={16} /> {v.contact.tg}
           </LinkButton>
           <LinkButton
             variant="secondary"
